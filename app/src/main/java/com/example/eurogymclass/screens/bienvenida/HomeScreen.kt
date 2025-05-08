@@ -1,0 +1,177 @@
+package com.example.eurogymclass.screens.bienvenida
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.eurogymclass.R
+import com.example.eurogymclass.ui.theme.BlueLight
+import com.example.eurogymclass.utilidades.LogoEuroGym
+import com.google.firebase.auth.FirebaseAuth
+
+@Composable
+fun HomeScreen(navHostController: NavHostController) {
+    val images = listOf(
+        R.drawable.ciclo, R.drawable.bodypump, R.drawable.discos, R.drawable.maquinas
+    )
+
+    var showMenu by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(horizontal = 16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Box {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_icono_perfil),
+                    contentDescription = "Perfil usuario",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { showMenu = true }
+                )
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Ver perfil") },
+                        onClick = {
+                            showMenu = false
+                            navHostController.navigate("perfil")
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Cerrar sesión") },
+                        onClick = {
+                            showMenu = false
+                            FirebaseAuth.getInstance().signOut()
+                            navHostController.navigate("initial") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            LogoEuroGym(navHostController)
+        }
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = "Bienvenido a tu app",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            listOf("CLASES", "AVISOS", "CONTACTO").forEach { item ->
+                Text(
+                    text = item,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    modifier = Modifier.clickable {
+                        when (item) {
+                            "CLASES" -> navHostController.navigate("clases")
+                            "AVISOS" -> navHostController.navigate("avisos")
+                            "CONTACTO" -> navHostController.navigate("contacto")
+                        }
+                    }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "La mejor opción de Alcorcón",
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .height(260.dp)
+                .padding(bottom = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            items(images) { imageRes ->
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .height(120.dp)
+                        .fillMaxWidth()
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Text(
+            text = "¡Prepárate para darlo todo!",
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Button(
+            onClick = { navHostController.navigate("clases") },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 24.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
+        ) {
+            Text("Ver próximas clases")
+        }
+    }
+}
