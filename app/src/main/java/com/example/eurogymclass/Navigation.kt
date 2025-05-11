@@ -31,8 +31,9 @@ fun Navigation(navHostController: NavHostController, auth: FirebaseAuth) {
 
         composable("initial") {
             BienvenidaScreen(
-                navigateToLogin = { navHostController.navigate("auth/true") },  // true para login
-                navigateToSignUp = { navHostController.navigate("auth/false") } // false para registro
+                navigateToLogin = { navHostController.navigate("auth/true") }, //true para login
+                navigateToSignUp = { navHostController.navigate("auth/false") }, //false para registro
+                navController = navHostController
             )
         }
 
