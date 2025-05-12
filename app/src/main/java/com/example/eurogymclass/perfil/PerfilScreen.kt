@@ -72,7 +72,7 @@ fun PerfilScreen(navController: NavHostController) {
             painter = if (user?.photoUrl != null)
                 rememberAsyncImagePainter(user.photoUrl)
             else
-                painterResource(id = R.drawable.ic_launcher_foreground),
+                painterResource(id = R.drawable.imagenperfil),
             contentDescription = "Avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -81,13 +81,6 @@ fun PerfilScreen(navController: NavHostController) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = user?.displayName ?: "PERFIL",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
 
         Text(
             text = user?.email ?: "email@ejemplo.com",

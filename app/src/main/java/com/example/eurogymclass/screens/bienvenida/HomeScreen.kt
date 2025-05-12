@@ -88,17 +88,7 @@ fun HomeScreen(navHostController: NavHostController) {
         ) {
             LogoEuroGym(navHostController)
         }
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = "Bienvenido a tu app",
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -108,7 +98,7 @@ fun HomeScreen(navHostController: NavHostController) {
                 Text(
                     text = item,
                     color = Color.White,
-                    fontSize = 18.sp,
+                    fontSize = 22.sp,
                     modifier = Modifier.clickable {
                         when (item) {
                             "CLASES" -> navHostController.navigate("clases")
@@ -152,12 +142,12 @@ fun HomeScreen(navHostController: NavHostController) {
             }
         }
 
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "¡Prepárate para darlo todo!",
             color = Color.White,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )

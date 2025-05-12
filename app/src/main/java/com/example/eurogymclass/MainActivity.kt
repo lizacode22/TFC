@@ -46,19 +46,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onStart(){
-        super.onStart()
-        val currentUser = auth.currentUser
-        if(currentUser!=null){
-            //navegar a la home
-            Log.i("liz","estoy logado")
-            //navegar
-            auth.signOut()
-
-        }
-    }
-
 }
 
 

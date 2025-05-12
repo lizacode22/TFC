@@ -1,5 +1,7 @@
 package com.example.eurogymclass.perfil
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.ui.theme.BlueLight
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistorialReservasScreen(
     navController: NavHostController,

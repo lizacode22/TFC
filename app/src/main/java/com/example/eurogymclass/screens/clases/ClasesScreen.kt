@@ -158,7 +158,7 @@ fun ClaseCard(
             .background(Color.DarkGray, shape = RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
-        // Aplica el padding a todo el bloque de texto
+
         Column(modifier = Modifier.padding(start = 8.dp)) {
             Text(
                 text = clase.titulo,
@@ -237,10 +237,10 @@ fun TopBar(navController: NavHostController) {
                 .clickable { navController.popBackStack() }
         )
 
-        // Este espacio central lo puedes usar si quieres dejarlo vacío o para un título opcional
+
         Spacer(modifier = Modifier.weight(1f))
 
-        // Perfil con menú dentro de Box para evitar desplazamientos
+
         Box {
             Icon(
                 painter = painterResource(id = R.drawable.ic_icono_perfil),

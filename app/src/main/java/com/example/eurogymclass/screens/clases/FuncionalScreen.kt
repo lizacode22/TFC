@@ -37,7 +37,7 @@ fun FuncionalScreen(navController: NavHostController) {
             .background(Color.Black)
             .padding(16.dp)
     ) {
-        // Top Bar con flecha y perfil
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +87,7 @@ fun FuncionalScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Logo centrado
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -133,7 +133,7 @@ fun FuncionalScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = { /* Acción reservar (opcional aquí) */ },
+            onClick = {  },
             colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import android.util.Log
 
 data class Aviso(val fecha: String = "", val titulo: String = "", val descripcion: String = "")
 
@@ -22,31 +23,34 @@ class AvisosViewModel : ViewModel() {
         db.collection("avisos")
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
+                    Log.e("AvisosDebug", "Error al cargar avisos", exception)
                     _avisos.value = listOf(
                         Aviso(
-                            "Error",
-                            "No se pudieron cargar los avisos",
-                            "Intenta nuevamente más tarde"
+                            fecha = "Error",
+                            titulo = "No se pudieron cargar los avisos",
+                            descripcion = "Intenta nuevamente más tarde"
                         )
                     )
                     return@addSnapshotListener
                 }
 
-                val lista = snapshot?.mapNotNull { document ->
-                    val descripcion = document.getString("descripcion")
-                    val fechaTimestamp = document.getTimestamp("fecha")
-                    val fecha = fechaTimestamp?.toDate()?.toString() ?: ""
-                    val titulo = document.getString("titulo")
+                Log.d("AvisosDebug", "📦 Avisos recibidos: ${snapshot?.documents?.size}")
 
-                    if (!fecha.isNullOrEmpty() && !titulo.isNullOrEmpty() && !descripcion.isNullOrEmpty()) {
-                        Aviso(titulo, descripcion, fecha)
-                    } else {
-                        null
-                    }
-                } ?: emptyList()
+                val lista = snapshot?.documents?.mapNotNull { document ->
+                    val descripcion = document.getString("descripcion") ?: return@mapNotNull null
+                    val fechaTimestamp = document.getTimestamp("fecha") ?: return@mapNotNull null
+                    val fecha = fechaTimestamp.toDate().toString()
+                    val titulo = document.getString("titulo") ?: return@mapNotNull null
+
+                    Aviso(
+                        fecha = fecha,
+                        titulo = titulo,
+                        descripcion = descripcion
+                    )
+                }?.sortedByDescending { it.fecha } ?: emptyList()
 
                 _avisos.value = lista
             }
-
     }
+
 }

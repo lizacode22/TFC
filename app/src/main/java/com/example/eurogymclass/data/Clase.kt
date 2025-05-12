@@ -35,13 +35,10 @@ class ClasesViewModel : ViewModel() {
         private set
 
     init {
-        val hoy = LocalDate.now()
-        if (hoy.dayOfWeek == DayOfWeek.MONDAY) {
-            resetearReservas()
-        }
         cargarClases()
     }
 
+    //no estoy utilizando esto ahora
     fun resetearReservas() {
         db.collection("clases").get().addOnSuccessListener { snapshot ->
             snapshot.documents.forEach { doc ->
@@ -70,7 +67,7 @@ class ClasesViewModel : ViewModel() {
                         val clase = doc.toObject(Clase::class.java) ?: throw Exception("Clase vacía")
                         lista.add(ClaseConId(doc.id, clase))
                     } catch (e: Exception) {
-                        Log.e("Firestore", "❌ Documento con error: ${doc.id} -> ${doc.data}", e)
+                        Log.e("Firestore", "Documento con error: ${doc.id} -> ${doc.data}", e)
                     }
                 }
 

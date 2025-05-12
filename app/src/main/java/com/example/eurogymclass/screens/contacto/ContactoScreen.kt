@@ -113,7 +113,7 @@ fun ContactoScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Mapa de Google como imagen
+
         Image(
             painter = painterResource(id = R.drawable.mapa_location),
             contentDescription = "Mapa",

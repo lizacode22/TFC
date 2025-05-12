@@ -37,7 +37,7 @@ fun PilatesScreen(navController: NavHostController) {
             .background(Color.Black)
             .padding(16.dp)
     ) {
-        // Top Bar con flecha y perfil
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +87,7 @@ fun PilatesScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Logo centrado
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -102,7 +102,7 @@ fun PilatesScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.pilates), // Asegúrate de tener esta imagen en drawable
+            painter = painterResource(id = R.drawable.pilates),
             contentDescription = "Imagen Pilates",
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,7 +133,7 @@ fun PilatesScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = { /* Acción reservar (opcional aquí) */ },
+            onClick = { },
             colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {

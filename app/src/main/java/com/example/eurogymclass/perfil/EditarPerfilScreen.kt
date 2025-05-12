@@ -1,5 +1,6 @@
 package com.example.eurogymclass.perfil
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -27,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -61,7 +64,7 @@ fun EditarPerfilScreen(
             .background(Color.Black)
             .padding(16.dp)
     ) {
-        // TOP BAR
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -113,12 +116,36 @@ fun EditarPerfilScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // LOGO CENTRADO
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             LogoEuroGym(navController)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.imagenperfil),
+                contentDescription = "Foto de perfil",
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(CircleShape)
+                    .background(Color.DarkGray)
+                    .clickable {  }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = FirebaseAuth.getInstance().currentUser?.email ?: "correo@example.com",
+                color = Color.LightGray,
+                fontSize = 14.sp
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
