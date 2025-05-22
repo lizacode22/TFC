@@ -22,6 +22,10 @@ import com.example.eurogymclass.R
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.google.firebase.auth.FirebaseAuth
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
 fun HomeScreen(navHostController: NavHostController) {
@@ -30,6 +34,7 @@ fun HomeScreen(navHostController: NavHostController) {
     )
 
     var showMenu by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -70,9 +75,21 @@ fun HomeScreen(navHostController: NavHostController) {
                         text = { Text("Cerrar sesión") },
                         onClick = {
                             showMenu = false
-                            FirebaseAuth.getInstance().signOut()
-                            navHostController.navigate("initial") {
-                                popUpTo(0) { inclusive = true }
+
+
+                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
+                                .requestEmail()
+                                .build()
+
+                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                FirebaseAuth.getInstance().signOut()
+                                navHostController.navigate("initial") {
+                                    popUpTo(0) { inclusive = true }
+                                }
                             }
                         }
                     )

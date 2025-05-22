@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,10 +24,23 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.eurogymclass.R
 import com.google.firebase.auth.FirebaseAuth
 import com.example.eurogymclass.utilidades.LogoEuroGym
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import coil.compose.AsyncImage
 
 @Composable
-fun PerfilScreen(navController: NavHostController) {
+fun PerfilScreen(navHostController: NavHostController) {
     val user = FirebaseAuth.getInstance().currentUser
+    val context = LocalContext.current
+
+
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
+        .requestEmail()
+        .build()
+
+    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
 
     Column(
         modifier = Modifier
@@ -47,7 +61,7 @@ fun PerfilScreen(navController: NavHostController) {
                 tint = Color.White,
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable { navController.popBackStack() }
+                    .clickable { navHostController.popBackStack() }
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_icono_perfil),
@@ -63,22 +77,40 @@ fun PerfilScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            LogoEuroGym(navController)
+            LogoEuroGym(navHostController)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Image(
-            painter = if (user?.photoUrl != null)
-                rememberAsyncImagePainter(user.photoUrl)
-            else
-                painterResource(id = R.drawable.imagenperfil),
-            contentDescription = "Avatar",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-        )
+        val user = FirebaseAuth.getInstance().currentUser
+        val correo = user?.email ?: ""
+        val inicial = correo.firstOrNull()?.uppercase() ?: "?"
+
+        if (user?.photoUrl != null) {
+            AsyncImage(
+                model = user.photoUrl,
+                contentDescription = "Foto de perfil",
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(Color.DarkGray),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(Color.DarkGray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = inicial,
+                    color = Color.White,
+                    fontSize = 32.sp
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -91,28 +123,30 @@ fun PerfilScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(32.dp))
 
         PerfilOption(text = "Editar Perfil") {
-            navController.navigate("editarPerfil")
+            navHostController.navigate("editarPerfil")
         }
 
         PerfilOption(text = "Próximas clases") {
-            navController.navigate("clases")
+            navHostController.navigate("clases")
         }
 
         PerfilOption(text = "Historial de reservas") {
-            navController.navigate("historialReservas")
+            navHostController.navigate("historialReservas")
         }
 
         PerfilOption(text = "Notificaciones") {
-            navController.navigate("avisos")
+            navHostController.navigate("avisos")
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
             onClick = {
-                FirebaseAuth.getInstance().signOut()
-                navController.navigate("initial") {
-                    popUpTo(0) { inclusive = true }
+                googleSignInClient.signOut().addOnCompleteListener {
+                    FirebaseAuth.getInstance().signOut()
+                    navHostController.navigate("initial") {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),

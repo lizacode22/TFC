@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,11 +23,14 @@ import com.example.eurogymclass.data.Clase
 import com.example.eurogymclass.data.ClasesViewModel
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.utilidades.LogoEuroGym
+import com.example.eurogymclass.utilidades.cerrarSesionCompleta
 import com.google.firebase.auth.FirebaseAuth
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.time.DayOfWeek
+import com.example.eurogymclass.utilidades.TopBar
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -54,6 +58,7 @@ fun ClasesScreen(
     ) {
         item {
             TopBar(navController)
+
             Spacer(modifier = Modifier.height(32.dp))
 
             Row(
@@ -216,63 +221,5 @@ fun ClaseCard(
             color = Color.White,
             fontSize = 16.sp
         )
-    }
-}
-
-@Composable
-fun TopBar(navController: NavHostController) {
-    var showMenu by remember { mutableStateOf(false) }
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_back),
-            contentDescription = "Volver",
-            tint = Color.White,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { navController.popBackStack() }
-        )
-
-
-        Spacer(modifier = Modifier.weight(1f))
-
-
-        Box {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_icono_perfil),
-                contentDescription = "Perfil",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { showMenu = true }
-            )
-
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Ver perfil") },
-                    onClick = {
-                        showMenu = false
-                        navController.navigate("perfil")
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Cerrar sesión") },
-                    onClick = {
-                        showMenu = false
-                        FirebaseAuth.getInstance().signOut()
-                        navController.navigate("initial") {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    }
-                )
-            }
-        }
     }
 }

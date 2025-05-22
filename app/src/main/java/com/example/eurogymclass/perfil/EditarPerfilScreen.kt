@@ -31,16 +31,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.eurogymclass.viewmodels.UsuariosViewModel
 import com.example.eurogymclass.ui.theme.BlueLight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.R
 import com.example.eurogymclass.utilidades.LogoEuroGym
+import com.example.eurogymclass.utilidades.TopBar
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import coil.compose.AsyncImage
+import com.example.eurogymclass.viewmodels.UsuariosViewModel
 
 @Composable
 fun EditarPerfilScreen(
@@ -52,6 +57,30 @@ fun EditarPerfilScreen(
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
     var showMenu by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    DropdownMenuItem(
+        text = { Text("Cerrar sesión") },
+        onClick = {
+            showMenu = false
+
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+
+            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+            googleSignInClient.signOut().addOnCompleteListener {
+                FirebaseAuth.getInstance().signOut()
+                navController.navigate("initial") {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+        }
+    )
+
 
     LaunchedEffect(usuario) {
         nombre = usuario?.nombre ?: ""
@@ -65,54 +94,7 @@ fun EditarPerfilScreen(
             .padding(16.dp)
     ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Volver",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { navController.popBackStack() }
-            )
-
-            Box {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_icono_perfil),
-                    contentDescription = "Perfil",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { showMenu = true }
-                )
-
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Ver perfil") },
-                        onClick = {
-                            showMenu = false
-                            navController.navigate("perfil")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        onClick = {
-                            showMenu = false
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate("initial") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-            }
-        }
+        TopBar(navController)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -131,56 +113,86 @@ fun EditarPerfilScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.imagenperfil),
-                contentDescription = "Foto de perfil",
+            val user = FirebaseAuth.getInstance().currentUser
+            val fotoPerfil = user?.photoUrl
+            val correo = user?.email ?: ""
+            val inicial = correo.firstOrNull()?.uppercase() ?: "?"
+
+            Column(
                 modifier = Modifier
-                    .size(96.dp)
-                    .clip(CircleShape)
-                    .background(Color.DarkGray)
-                    .clickable {  }
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (fotoPerfil != null) {
+                    // Si el usuario tiene una imagen de perfil
+                    AsyncImage(
+                        model = fotoPerfil,
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier
+                            .size(96.dp)
+                            .clip(CircleShape)
+                            .background(Color.DarkGray)
+                    )
+                } else {
+                    // Si no tiene imagen, mostrar inicial
+                    Box(
+                        modifier = Modifier
+                            .size(96.dp)
+                            .clip(CircleShape)
+                            .background(Color.DarkGray),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = inicial,
+                            color = Color.White,
+                            fontSize = 32.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = correo,
+                    color = Color.LightGray,
+                    fontSize = 14.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text("Editar perfil", color = Color.White, fontSize = 24.sp)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            TextField(
+                value = nombre,
+                onValueChange = { nombre = it },
+                label = { Text("Nombre") },
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = FirebaseAuth.getInstance().currentUser?.email ?: "correo@example.com",
-                color = Color.LightGray,
-                fontSize = 14.sp
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            TextField(
+                value = apellidos,
+                onValueChange = { apellidos = it },
+                label = { Text("Apellidos") },
+                modifier = Modifier.fillMaxWidth()
             )
-        }
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Editar perfil", color = Color.White, fontSize = 24.sp)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        TextField(
-            value = nombre,
-            onValueChange = { nombre = it },
-            label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        TextField(
-            value = apellidos,
-            onValueChange = { apellidos = it },
-            label = { Text("Apellidos") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                viewModel.actualizarDatos(nombre, apellidos)
-                navController.popBackStack()
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
-        ) {
-            Text("Guardar cambios", color = Color.White)
+            Button(
+                onClick = {
+                    viewModel.actualizarDatos(nombre, apellidos)
+                    navController.popBackStack()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
+            ) {
+                Text("Guardar cambios", color = Color.White)
+            }
         }
     }
 }

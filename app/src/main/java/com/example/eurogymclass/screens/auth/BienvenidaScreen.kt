@@ -55,7 +55,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-
 @Composable
 fun BienvenidaScreen(
     navigateToLogin: () -> Unit = {},
@@ -70,9 +69,8 @@ fun BienvenidaScreen(
     val auth = FirebaseAuth.getInstance()
     val scope = rememberCoroutineScope()
 
-    // 1. Configuración de Google Sign-In
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com") // ⚠️ Sustituye por tu ID de cliente web
+        .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
         .requestEmail()
         .build()
 
@@ -100,7 +98,7 @@ fun BienvenidaScreen(
         }
     }
 
-    // UI
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -249,32 +247,6 @@ fun BienvenidaScreen(
         }
 
         Spacer(modifier = Modifier.height(40.dp))
-    }
-
-    @Composable
-    fun GoogleButton(title: String, onClick: () -> Unit) {
-        Button(
-            onClick = onClick,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-            shape = RoundedCornerShape(24.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = R.drawable.google),
-                    contentDescription = "Google logo",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     }
 }
 

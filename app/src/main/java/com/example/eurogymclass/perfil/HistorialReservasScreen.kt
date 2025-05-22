@@ -21,10 +21,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.data.ClasesViewModel
 import com.example.eurogymclass.screens.clases.ClaseCard
-import com.example.eurogymclass.screens.clases.TopBar
 import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.ui.theme.BlueLight
+import com.example.eurogymclass.utilidades.TopBar
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

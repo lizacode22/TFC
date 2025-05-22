@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.eurogymclass.R
 import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.google.firebase.auth.FirebaseAuth
+import com.example.eurogymclass.utilidades.TopBar
 
 @Composable
 fun ContactoScreen(navController: NavHostController) {
@@ -39,55 +40,7 @@ fun ContactoScreen(navController: NavHostController) {
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Top Bar
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Volver",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { navController.popBackStack() }
-            )
-
-            Box {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_icono_perfil),
-                    contentDescription = "Perfil",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { showMenu = true }
-                )
-
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Ver perfil") },
-                        onClick = {
-                            showMenu = false
-                            navController.navigate("perfil")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        onClick = {
-                            showMenu = false
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate("initial") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-            }
-        }
+        TopBar(navController)
 
         Spacer(modifier = Modifier.height(32.dp))
 

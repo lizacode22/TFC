@@ -36,7 +36,6 @@ fun Navigation(navHostController: NavHostController, auth: FirebaseAuth) {
                 navController = navHostController
             )
         }
-
         composable(
             route = "auth/{startInLogin}",
             arguments = listOf(
@@ -51,26 +50,15 @@ fun Navigation(navHostController: NavHostController, auth: FirebaseAuth) {
                 onAuthSuccess = { navHostController.navigate("home") }
             )
         }
+        composable("home") { HomeScreen(navHostController) }
 
-        composable("home") {
-            HomeScreen(navHostController)
-        }
+        composable("clases") { ClasesScreen(navHostController) }
 
-        composable("clases") {
-            ClasesScreen(navHostController)
-        }
+        composable("avisos") { AvisosScreen(navHostController) }
 
-        composable("avisos") {
-            AvisosScreen(navHostController)
-        }
+        composable("contacto") { ContactoScreen(navHostController) }
 
-        composable("contacto") {
-            ContactoScreen(navHostController)
-        }
-
-        composable("perfil") {
-            PerfilScreen(navController = navHostController)
-        }
+        composable("perfil") { PerfilScreen(navHostController) }
 
         composable("pilates") { PilatesScreen(navHostController) }
 

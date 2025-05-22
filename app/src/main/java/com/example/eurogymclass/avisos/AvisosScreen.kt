@@ -21,6 +21,7 @@ import com.example.eurogymclass.ui.theme.Black
 import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.example.eurogymclass.viewmodels.AvisosViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.example.eurogymclass.utilidades.TopBar
 
 @Composable
 fun AvisosScreen(
@@ -38,54 +39,7 @@ fun AvisosScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Volver",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { navController.popBackStack() }
-            )
-
-            Box {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_icono_perfil),
-                    contentDescription = "Perfil",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { showMenu = true }
-                )
-
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Ver perfil") },
-                        onClick = {
-                            showMenu = false
-                            navController.navigate("perfil")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        onClick = {
-                            showMenu = false
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate("initial") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-            }
-        }
+        TopBar(navController)
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -102,10 +56,10 @@ fun AvisosScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text("CLASES", color = Color.Gray, fontSize = 14.sp,
+            Text("CLASES", color = Color.Gray, fontSize = 16.sp,
                 modifier = Modifier.clickable { navController.navigate("clases") })
-            Text("AVISOS", color = Color.White, fontSize = 14.sp)
-            Text("CONTACTO", color = Color.Gray, fontSize = 14.sp,
+            Text("AVISOS", color = Color.White, fontSize = 16.sp)
+            Text("CONTACTO", color = Color.Gray, fontSize = 16.sp,
                 modifier = Modifier.clickable { navController.navigate("contacto") })
         }
 
@@ -143,7 +97,7 @@ fun AvisosScreen(
                         fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Divider(color = Color.DarkGray, thickness = 1.dp)
+
                 }
             }
         }
