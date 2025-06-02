@@ -103,8 +103,9 @@ graph LR
 ```mermaid
 erDiagram
     usuarios {
-        string uid PK
+        string id PK
         string nombre
+        string apellidos
         string email
         timestamp fechaRegistro
         string[] clasesReservadas
