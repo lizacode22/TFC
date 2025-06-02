@@ -99,13 +99,13 @@ graph LR
 
 ```
 ---
+### Diagrama de clases
 ```mermaid
 erDiagram
     usuarios {
         string uid PK
         string nombre
         string email
-        string telefono
         timestamp fechaRegistro
         string[] clasesReservadas
     }
@@ -122,9 +122,8 @@ erDiagram
     avisos {
         string id PK
         string titulo
-        string mensaje
+        string descripcion
         timestamp fecha
     }
 
     usuarios ||--o{ clases : "reserva"
-    clases ||--o{ avisos : "anuncia"
