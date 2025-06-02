@@ -52,6 +52,8 @@ Con esto se busca:
 - *Lenguaje:* Kotlin + Jetpack Compose
 - *Base de datos:* Firebase Firestore
 - *Autenticación:* Firebase Auth
+- *Seguimiento:* Firebase Crashlytic
+- *Mensajería push:* Cloud Messaging
 - *UI Framework:* Material 3
 - *Librerías:*
   - Coil (carga de imágenes)
