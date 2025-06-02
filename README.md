@@ -96,3 +96,35 @@ graph LR
   Usuario --> Avisos
   Usuario --> Contacto
   Usuario --> CerrarSesion
+
+```
+---
+```mermaid
+erDiagram
+    usuarios {
+        string uid PK
+        string nombre
+        string email
+        string telefono
+        timestamp fechaRegistro
+        string[] clasesReservadas
+    }
+
+    clases {
+        string id PK
+        string nombre
+        string descripcion
+        string horario
+        number capacidad
+        string[] inscritos FK
+    }
+
+    avisos {
+        string id PK
+        string titulo
+        string mensaje
+        timestamp fecha
+    }
+
+    usuarios ||--o{ clases : "reserva"
+    clases ||--o{ avisos : "anuncia"
