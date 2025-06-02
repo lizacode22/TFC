@@ -99,7 +99,7 @@ graph LR
 
 ```
 ---
-### Diagrama de clases
+### Modelo de datos Firestore
 ```mermaid
 erDiagram
     usuarios {
@@ -131,33 +131,6 @@ erDiagram
 
 ```
 ---
-### Diagrama Entidad - Relación
-```mermaid
-erDiagram
-    USUARIOS {
-        string uid PK
-        string nombre
-        string email
-        string telefono
-        timestamp fechaRegistro
-        string[] clasesReservadas
-    }
 
-    CLASES {
-        string id PK
-        string nombre
-        string descripcion
-        string horario
-        number capacidad
-        string[] inscritos
-    }
 
-    AVISOS {
-        string id PK
-        string titulo
-        string mensaje
-        timestamp fecha
-    }
-
-    USUARIOS ||--o{ CLASES : "reserva"
 
