@@ -63,9 +63,9 @@ Con esto se busca:
 
 ## 🛠️ Modelo de Datos
 
-#Diagramas de Casos de Uso
-
 A continuación se muestran los diagramas de casos de uso principales con sintaxis Mermaid válida.
+
+### Casos de Uso para **Usuarios Registrados**
 
 ```mermaid
 graph LR
