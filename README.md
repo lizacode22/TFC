@@ -9,11 +9,11 @@ Permite a los usuarios registrarse, visualizar clases disponibles, reservar su p
 
 1. [🎯 Objetivo del proyecto](#-objetivo-del-proyecto)  
 2. [🚀 Funcionalidades](#-funcionalidades)  
-3. [🛠️ Tecnologías y herramientas](#️-tecnologías-y-herramientas)  
-4. [📱 Capturas de pantalla](#-capturas-de-pantalla)  
-5. [🏗️ Arquitectura del proyecto](#️-arquitectura-del-proyecto)  
-6. [☁️ Estructura de Firebase](#-estructura-de-firebase)  
-7. [🔒 Seguridad y validaciones](#-seguridad-y-validaciones)  
+3. [🛠️ Tecnologías y herramientas](#️-tecnologías-y-herramientas)
+4. [🛠️ Modelo de Datos](#️-modelo-de-datos)
+5. [📱 Capturas de pantalla](#-capturas-de-pantalla)  
+6. [🏗️ Arquitectura del proyecto](#️-arquitectura-del-proyecto)  
+7. [☁️ Estructura de Firebase](#-estructura-de-firebase)   
 8. [🧪 Instalación y ejecución](#-instalación-y-ejecución)  
 9. [👤 Autor](#-autor)  
 10. [📌 Consideraciones finales](#-consideraciones-finales)
@@ -61,4 +61,38 @@ Con esto se busca:
 
 ---
 
+## 🛠️ Modelo de Datos
 
+#Diagramas de Casos de Uso
+
+A continuación se muestran los diagramas de casos de uso principales con sintaxis Mermaid válida.
+
+```mermaid
+graph LR
+  Usuario[Usuario Registrado]
+
+  Inicio[Iniciar aplicación]
+  Login[Registrarse / Iniciar sesión]
+  Recuperar[Recuperar contraseña]
+  VerClases[Visualizar clases]
+  DetallesClase[Ver detalles de clase]
+  Reserva[Realizar reserva]
+  Cancelar[Cancelar reserva]
+  Historial[Consultar historial]
+  Perfil[Editar perfil]
+  Avisos[Ver avisos]
+  Contacto[Ver contacto]
+  CerrarSesion[Cerrar sesión]
+
+  Usuario --> Inicio
+  Usuario --> Login
+  Usuario --> Recuperar
+  Usuario --> VerClases
+  Usuario --> DetallesClase
+  Usuario --> Reserva
+  Usuario --> Cancelar
+  Usuario --> Historial
+  Usuario --> Perfil
+  Usuario --> Avisos
+  Usuario --> Contacto
+  Usuario --> CerrarSesion
