@@ -238,8 +238,7 @@ Se aplican reglas personalizadas que:
 - ❌ Restringen la edición de clases y avisos a personal administrativo.
 - 🔐 Protegen los datos sensibles mediante autenticación y permisos.
 
-
-Esta estructura garantiza un modelo seguro, escalable y fácil de mantener, cumpliendo con los principios de buenas prácticas en aplicaciones móviles conectadas a la nube.
+>Esta estructura garantiza un modelo seguro, escalable y fácil de mantener, cumpliendo con los principios de buenas prácticas en aplicaciones móviles conectadas a la nube.
 ---
 
 
