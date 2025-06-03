@@ -153,9 +153,20 @@ fun ClaseCard(
     val estaLlena = clase.inscritos >= clase.capacidad
 
     val diasSemana = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
-    val diaHoy = java.time.LocalDate.now().dayOfWeek.value  // 1 = Lunes, 7 = Domingo
-    val diaClaseIndex = diasSemana.indexOf(clase.dia) + 1
-    val claseYaPaso = diaClaseIndex < diaHoy
+
+    val hoy = java.time.LocalDateTime.now()
+    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+    val indiceDiaClase = diasSemana.indexOf(clase.dia)
+    val fechaClase = lunesSemana.plusDays(indiceDiaClase.toLong())
+
+    val horaClase = try {
+        java.time.LocalTime.parse(clase.hora)  // debe estar en formato "HH:mm"
+    } catch (e: Exception) {
+        java.time.LocalTime.MIDNIGHT // por defecto, si falla el parseo
+    }
+
+    val fechaYHoraClase = java.time.LocalDateTime.of(fechaClase, horaClase)
+    val claseYaPaso = fechaYHoraClase.isBefore(hoy)
 
     Column(
         modifier = Modifier
@@ -163,7 +174,6 @@ fun ClaseCard(
             .background(Color.DarkGray, shape = RoundedCornerShape(12.dp))
             .padding(16.dp)
     ) {
-
         Column(modifier = Modifier.padding(start = 8.dp)) {
             Text(
                 text = clase.titulo,
@@ -214,6 +224,7 @@ fun ClaseCard(
 
         Text(
             text = when {
+                claseYaPaso -> "Finalizada"
                 estaLlena && !yaReservado -> "Completa"
                 yaReservado -> "Cancelar"
                 else -> "Reservar"

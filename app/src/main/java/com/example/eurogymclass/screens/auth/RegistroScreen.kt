@@ -29,6 +29,7 @@ import com.example.eurogymclass.ui.theme.SelectedField
 import com.example.eurogymclass.ui.theme.UnselectedField
 import com.example.eurogymclass.ui.theme.White
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun SignUpScreen(
@@ -220,8 +221,29 @@ fun SignUpScreen(
                 }
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.i("SignUp", "Registro exitoso")
-                        onSignUpSuccess()
+                        val uid = auth.currentUser?.uid
+                        val db = FirebaseFirestore.getInstance()
+
+                        val user = hashMapOf(
+                            "nombre" to nombres,
+                            "apellidos" to apellidos,
+                            "email" to email,
+                            "fechaRegistro" to com.google.firebase.Timestamp.now(),
+                            "clasesReservadas" to emptyList<String>()
+                        )
+
+                        if (uid != null) {
+                            db.collection("usuarios").document(uid).set(user)
+                                .addOnSuccessListener {
+                                    Log.i("Firestore", "Usuario guardado correctamente")
+                                    onSignUpSuccess()
+                                }
+                                .addOnFailureListener { e ->
+                                    showError = true
+                                    errorMessage = "Error al guardar datos del usuario"
+                                    Log.e("Firestore", "Error: ${e.message}")
+                                }
+                        }
                     } else {
                         showError = true
                         errorMessage = task.exception?.localizedMessage ?: "Registro fallido"

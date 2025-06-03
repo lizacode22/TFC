@@ -56,7 +56,7 @@ class ClasesViewModel : ViewModel() {
         db.collection("clases")
             .addSnapshotListener { result, error ->
                 if (error != null) {
-                    Log.e("Firestore", "🔥 Error general en snapshot", error)
+                    Log.e("Firestore", "Error general en snapshot", error)
                     return@addSnapshotListener
                 }
 
@@ -76,10 +76,11 @@ class ClasesViewModel : ViewModel() {
     }
 
     fun toggleReserva(claseId: String, clase: Clase) {
+
         val uid = user?.uid ?: return
         val nuevaLista = clase.usuarios.toMutableList()
-
         val yaReservado = nuevaLista.contains(uid)
+
         if (yaReservado) {
             nuevaLista.remove(uid)
         } else {
@@ -94,7 +95,27 @@ class ClasesViewModel : ViewModel() {
 
         db.collection("clases").document(claseId)
             .update(actualizaciones)
+            .addOnSuccessListener {
+                val usuarioRef = db.collection("usuarios").document(uid)
+                val actualizacionUsuario = if (yaReservado) {
+                    com.google.firebase.firestore.FieldValue.arrayRemove(claseId)
+                } else {
+                    com.google.firebase.firestore.FieldValue.arrayUnion(claseId)
+                }
+
+                usuarioRef.update("clasesReservadas", actualizacionUsuario)
+                    .addOnSuccessListener {
+                        Log.i("Reserva", "Usuario actualizado con clase $claseId")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Reserva", "Error actualizando usuario: ${e.message}")
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Reserva", "Error actualizando clase: ${e.message}")
+            }
     }
+
 
     fun clasesReservadasPorUsuario(): List<ClaseConId> {
         val uid = user?.uid ?: return emptyList()
