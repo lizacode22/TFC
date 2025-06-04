@@ -150,7 +150,7 @@ EurogymClass/
 │           │       ├── avisos/
 │           │       │   └── AvisosScreen.kt
 │           │       ├── data/
-│           │       │   ├── Clase.kt
+│           │       │   ├── Clase
 │           │       │   └── Usuario.kt
 │           │       ├── perfil/
 │           │       │   ├── EditarPerfilScreen.kt
@@ -159,9 +159,11 @@ EurogymClass/
 │           │       ├── screens/
 │           │       │   ├── auth/
 │           │       │   ├── bienvenida/
+│           │       │   ├── ChatBot/
 │           │       │   ├── clases/
 │           │       │   └── contacto/
 │           │       ├── ui.theme/
+│           │       │   ├── ChatBotApi
 │           │       │   ├── Color.kt
 │           │       │   ├── Theme.kt
 │           │       │   └── Type.kt
@@ -172,6 +174,7 @@ EurogymClass/
 │           │       │   ├── AvisosViewModel.kt
 │           │       │   └── UsuariosViewModel.kt
 │           │       ├── MainActivity.kt
+│           │       ├── Messaging
 │           │       └── Navigation.kt
 │           └── res/
 │           └── AndroidManifest.xml
@@ -182,7 +185,8 @@ EurogymClass/
 ```
 ---
 ## 📱 Capturas de pantalla
-
+Pantalla de acceso
+![Pantalla de Bienvenida](readmeImagenes/BienvenidaScreen.png)
 ---
 ## 🔥 Estructura de Firebase
 
