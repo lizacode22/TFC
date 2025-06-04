@@ -186,11 +186,13 @@ EurogymClass/
 ---
 ## 📱 Capturas de pantalla
 
-# 📲 Pantalla de acceso
+###📲 Pantalla de acceso
 
-Esta es la pantalla principal donde el usuario puede registrarse, iniciar sesión o acceder con Google.
+Pantalla principal donde el usuario puede registrarse, iniciar sesión, recuperar contraseña o acceder con Google.
 
-<img src="readmeImagenes/AccesoScreen.png" alt="Pantalla de acceso" width="300"/>
+<div align="center">
+  <img src="readmeImagenes/AccesoScreen.png" width="250"/>
+</div>
 ---
 ## 🔥 Estructura de Firebase
 
