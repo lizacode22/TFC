@@ -136,7 +136,7 @@ fun BienvenidaScreen(
                         if (resetMessage.isNotEmpty()) {
                             Text(
                                 text = resetMessage,
-                                color = if ("enviado" in resetMessage.lowercase()) Color.Green else Color.Red,
+                                color = if ("enviado" in resetMessage.lowercase()) Color.Red else Color.Red,
                                 fontSize = 12.sp,
                                 modifier = Modifier.padding(top = 8.dp)
                             )

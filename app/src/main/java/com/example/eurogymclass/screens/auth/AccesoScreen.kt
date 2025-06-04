@@ -147,7 +147,16 @@ fun LoginScreen(
                         onLoginSuccess()
                     } else {
                         showError = true
-                        errorMessage = task.exception?.localizedMessage ?: "Error de inicio de sesion"
+                        val firebaseError = task.exception?.localizedMessage?.lowercase() ?: ""
+
+                        errorMessage = when {
+                            "password is invalid" in firebaseError -> "La contraseña es incorrecta."
+                            "no user record" in firebaseError -> "No existe ninguna cuenta registrada con ese correo."
+                            "auth credential is incorrect" in firebaseError -> "Las credenciales son incorrectas o han caducado."
+                            "badly formatted" in firebaseError -> "El formato del correo es inválido."
+                            else -> "Error al iniciar sesión. Revisa los datos introducidos."
+                        }
+
                         Log.e("Login", "Error: ${task.exception}")
                     }
                 }
