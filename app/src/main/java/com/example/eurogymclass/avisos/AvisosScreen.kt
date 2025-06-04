@@ -22,6 +22,8 @@ import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.example.eurogymclass.viewmodels.AvisosViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.example.eurogymclass.utilidades.TopBar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun AvisosScreen(
@@ -77,27 +79,27 @@ fun AvisosScreen(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(avisos) { aviso ->
                 Column {
+                    val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                     Text(
-                        text = if (aviso.fecha.isNotEmpty()) aviso.fecha else "Fecha no disponible",
+                        text = formato.format(aviso.fecha),
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (aviso.titulo.isNotEmpty()) aviso.titulo else "Título no disponible",
+                        text = aviso.titulo.ifEmpty { "Título no disponible" },
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (aviso.descripcion.isNotEmpty()) aviso.descripcion else "Descripción no disponible",
+                        text = aviso.descripcion.ifEmpty { "Descripción no disponible" },
                         color = Color.Gray,
                         fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
                 }
             }
         }

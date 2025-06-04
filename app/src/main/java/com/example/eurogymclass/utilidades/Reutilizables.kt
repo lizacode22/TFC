@@ -88,12 +88,20 @@ fun TopBar(navController: NavHostController) {
                     }
                 )
                 DropdownMenuItem(
+                    text = { Text("Asistente") },
+                    onClick = {
+                        showMenu = false
+                        navController.navigate("chatbot")
+                    }
+                )
+                DropdownMenuItem(
                     text = { Text("Cerrar sesión") },
                     onClick = {
                         showMenu = false
                         cerrarSesionCompleta(context, navController)
                     }
                 )
+
             }
         }
     }

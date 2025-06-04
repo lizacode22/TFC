@@ -5,8 +5,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import android.util.Log
+import java.util.Date
 
-data class Aviso(val fecha: String = "", val titulo: String = "", val descripcion: String = "")
+data class Aviso(
+    val fecha: Date = Date(),
+    val titulo: String = "",
+    val descripcion: String = ""
+)
 
 class AvisosViewModel : ViewModel() {
 
@@ -26,7 +31,7 @@ class AvisosViewModel : ViewModel() {
                     Log.e("AvisosDebug", "Error al cargar avisos", exception)
                     _avisos.value = listOf(
                         Aviso(
-                            fecha = "Error",
+                            fecha = Date(),
                             titulo = "No se pudieron cargar los avisos",
                             descripcion = "Intenta nuevamente más tarde"
                         )
@@ -34,12 +39,12 @@ class AvisosViewModel : ViewModel() {
                     return@addSnapshotListener
                 }
 
-                Log.d("AvisosDebug", "📦 Avisos recibidos: ${snapshot?.documents?.size}")
+                Log.d("AvisosDebug", "Avisos recibidos: ${snapshot?.documents?.size}")
 
                 val lista = snapshot?.documents?.mapNotNull { document ->
                     val descripcion = document.getString("descripcion") ?: return@mapNotNull null
                     val fechaTimestamp = document.getTimestamp("fecha") ?: return@mapNotNull null
-                    val fecha = fechaTimestamp.toDate().toString()
+                    val fecha = fechaTimestamp.toDate()
                     val titulo = document.getString("titulo") ?: return@mapNotNull null
 
                     Aviso(
@@ -52,5 +57,4 @@ class AvisosViewModel : ViewModel() {
                 _avisos.value = lista
             }
     }
-
 }

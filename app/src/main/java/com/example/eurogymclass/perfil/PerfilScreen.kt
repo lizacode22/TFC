@@ -138,6 +138,10 @@ fun PerfilScreen(navHostController: NavHostController) {
             navHostController.navigate("avisos")
         }
 
+        PerfilOption(text = "Asistente virtual") {
+            navHostController.navigate("chatbot")
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
