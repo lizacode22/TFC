@@ -186,14 +186,43 @@ EurogymClass/
 ---
 ## 📱 Capturas de pantalla
 
-###📲 Pantalla de acceso
+### 📲 Pantalla de Bienvenida
 
 Pantalla principal donde el usuario puede registrarse, iniciar sesión, recuperar contraseña o acceder con Google.
 
 <div align="center">
+  <img src="readmeImagenes/BienvenidaScreen.png" width="250"/>
+</div>
+
+---
+### 📲 Pantalla de registro
+
+Pantalla de registro para crear una cuenta de usuario.
+
+<div align="center">
+  <img src="readmeImagenes/RegistroScreen.png" width="250"/>
+</div>
+
+---
+### 📲 Pantalla de acceso
+
+Pantalla para ingresar a la aplicación a través de correo y contraseña
+
+<div align="center">
   <img src="readmeImagenes/AccesoScreen.png" width="250"/>
 </div>
+
 ---
+### 📲 Pantalla de inicio
+
+Pantalla de inicio que se ejecuta al abrir la aplicación con las credenciales
+
+<div align="center">
+  <img src="readmeImagenes/HomeScreen.png" width="250"/>
+</div>
+
+---
+
 ## 🔥 Estructura de Firebase
 
 La aplicación **EuroGymClass** utiliza **Firebase** como backend principal, aprovechando varias de sus funcionalidades para gestionar usuarios, almacenar datos en tiempo real y enviar notificaciones.
