@@ -184,7 +184,7 @@ EurogymClass/
 └── settings.gradle
 ```
 ---
-## 📱 Capturas de pantalla
+## 📱 Pantallas Principales
 
 ### 📲 Pantalla de Bienvenida
 
@@ -206,7 +206,7 @@ Pantalla de registro para crear una cuenta de usuario.
 ---
 ### 📲 Pantalla de acceso
 
-Pantalla para ingresar a la aplicación a través de correo y contraseña
+Pantalla para ingresar a la aplicación a través de correo y contraseña.
 
 <div align="center">
   <img src="readmeImagenes/AccesoScreen.png" width="250"/>
@@ -215,10 +215,40 @@ Pantalla para ingresar a la aplicación a través de correo y contraseña
 ---
 ### 📲 Pantalla de inicio
 
-Pantalla de inicio que se ejecuta al abrir la aplicación con las credenciales
+Pantalla de inicio que se ejecuta al abrir la aplicación con las credenciales.
 
 <div align="center">
   <img src="readmeImagenes/HomeScreen.png" width="250"/>
+</div>
+
+---
+
+### 📲 Pantalla de Notificaciones
+
+Pantalla de notificaciones, implementando Firebase Firestore en tiempo real.
+
+<div align="center">
+  <img src="readmeImagenes/AvisoScreen.png" width="250"/>
+</div>
+
+---
+
+### 📲 Pantalla de Contacto
+
+Pantalla de contacto con información del gimnasio y una ubicación que redirije a Google Maps.
+
+<div align="center">
+  <img src="readmeImagenes/ContactoScreen.png" width="250"/>
+</div>
+
+---
+
+### 📲 Pantalla de Reserva
+
+Pantalla donde el usuario visualiza las clases de la semana con opción a realizar la reserva de la clase o su cancelación.
+
+<div align="center">
+  <img src="readmeImagenes/ClasesScreen1.png" width="250"/>
 </div>
 
 ---
