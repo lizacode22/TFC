@@ -13,20 +13,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.R
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.utilidades.LogoEuroGym
-import com.google.firebase.auth.FirebaseAuth
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import com.example.eurogymclass.utilidades.TopBar
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.navigationBars
 
 @Composable
 fun HomeScreen(navHostController: NavHostController) {
@@ -34,25 +34,16 @@ fun HomeScreen(navHostController: NavHostController) {
         R.drawable.ciclo, R.drawable.bodypump, R.drawable.discos, R.drawable.maquinas
     )
 
-    var showMenu by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
+            .windowInsetsPadding(WindowInsets.systemBars)
             .padding(horizontal = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            TopBar(navHostController)
-        }
+        TopBar(navHostController)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -62,6 +53,7 @@ fun HomeScreen(navHostController: NavHostController) {
         ) {
             LogoEuroGym(navHostController)
         }
+
         Spacer(modifier = Modifier.height(40.dp))
 
         Row(
@@ -99,8 +91,7 @@ fun HomeScreen(navHostController: NavHostController) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
-                .height(260.dp)
-                .padding(bottom = 10.dp),
+                .height(260.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -131,11 +122,12 @@ fun HomeScreen(navHostController: NavHostController) {
         Button(
             onClick = { navHostController.navigate("clases") },
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 24.dp),
+                .align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
         ) {
             Text("Ver próximas clases")
         }
+
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
     }
 }

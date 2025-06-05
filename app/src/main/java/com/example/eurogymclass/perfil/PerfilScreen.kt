@@ -27,6 +27,8 @@ import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import coil.compose.AsyncImage
+import com.example.eurogymclass.utilidades.TopBar
+import com.example.eurogymclass.utilidades.defaultScreenPadding
 
 @Composable
 fun PerfilScreen(navHostController: NavHostController) {
@@ -46,30 +48,13 @@ fun PerfilScreen(navHostController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(16.dp),
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { navHostController.popBackStack() }
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_icono_perfil),
-                contentDescription = "Profile Icon",
-                tint = Color.White,
-                modifier = Modifier.size(24.dp)
-            )
-        }
+        TopBar(navHostController)
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -158,6 +143,7 @@ fun PerfilScreen(navHostController: NavHostController) {
         ) {
             Text("Cerrar sesión", color = Color.White)
         }
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
     }
 }
 

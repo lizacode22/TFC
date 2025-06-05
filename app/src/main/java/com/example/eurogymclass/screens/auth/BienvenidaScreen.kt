@@ -54,6 +54,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import com.example.eurogymclass.utilidades.defaultScreenPadding
 
 @Composable
 fun BienvenidaScreen(
@@ -264,7 +265,7 @@ fun GoogleButton(title: String, onClick: () -> Unit) {
             Image(
                 painter = painterResource(id = R.drawable.google),
                 contentDescription = "Google logo",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(30.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
