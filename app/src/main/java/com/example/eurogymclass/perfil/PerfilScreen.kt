@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -43,107 +44,99 @@ fun PerfilScreen(navHostController: NavHostController) {
 
     val googleSignInClient = GoogleSignIn.getClient(context, gso)
 
+    val correo = user?.email ?: ""
+    val inicial = correo.firstOrNull()?.uppercase() ?: "?"
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .windowInsetsPadding(WindowInsets.systemBars)
             .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(bottom = 40.dp)
+    )  {
+        item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        TopBar(navHostController)
+        item { TopBar(navHostController) }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        item { Spacer(modifier = Modifier.height(32.dp)) }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            LogoEuroGym(navHostController)
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        val user = FirebaseAuth.getInstance().currentUser
-        val correo = user?.email ?: ""
-        val inicial = correo.firstOrNull()?.uppercase() ?: "?"
-
-        if (user?.photoUrl != null) {
-            AsyncImage(
-                model = user.photoUrl,
-                contentDescription = "Foto de perfil",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(Color.DarkGray),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(Color.DarkGray),
-                contentAlignment = Alignment.Center
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = inicial,
-                    color = Color.White,
-                    fontSize = 32.sp
-                )
+                LogoEuroGym(navHostController)
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item { Spacer(modifier = Modifier.height(32.dp)) }
 
-        Text(
-            text = user?.email ?: "email@ejemplo.com",
-            fontSize = 16.sp,
-            color = Color.Gray
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        PerfilOption(text = "Editar Perfil") {
-            navHostController.navigate("editarPerfil")
-        }
-
-        PerfilOption(text = "Próximas clases") {
-            navHostController.navigate("clases")
-        }
-
-        PerfilOption(text = "Historial de reservas") {
-            navHostController.navigate("historialReservas")
-        }
-
-        PerfilOption(text = "Notificaciones") {
-            navHostController.navigate("avisos")
-        }
-
-        PerfilOption(text = "Asistente virtual") {
-            navHostController.navigate("chatbot")
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(
-            onClick = {
-                googleSignInClient.signOut().addOnCompleteListener {
-                    FirebaseAuth.getInstance().signOut()
-                    navHostController.navigate("initial") {
-                        popUpTo(0) { inclusive = true }
-                    }
+        item {
+            if (user?.photoUrl != null) {
+                AsyncImage(
+                    model = user.photoUrl,
+                    contentDescription = "Foto de perfil",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color.DarkGray),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color.DarkGray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = inicial,
+                        color = Color.White,
+                        fontSize = 32.sp
+                    )
                 }
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Cerrar sesión", color = Color.White)
+            }
         }
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+        item {
+            Text(
+                text = user?.email ?: "email@ejemplo.com",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+
+        item { PerfilOption("Editar Perfil") { navHostController.navigate("editarPerfil") } }
+        item { PerfilOption("Próximas clases") { navHostController.navigate("clases") } }
+        item { PerfilOption("Historial de reservas") { navHostController.navigate("historialReservas") } }
+        item { PerfilOption("Notificaciones") { navHostController.navigate("avisos") } }
+        item { PerfilOption("Asistente virtual") { navHostController.navigate("chatbot") } }
+
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+
+        item {
+            Button(
+                onClick = {
+                    googleSignInClient.signOut().addOnCompleteListener {
+                        FirebaseAuth.getInstance().signOut()
+                        navHostController.navigate("initial") {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cerrar sesión", color = Color.White)
+            }
+        }
     }
 }
 

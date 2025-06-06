@@ -1,4 +1,4 @@
-package com.example.eurogymclass.screens.ChatBot
+package com.example.eurogymclass.ChatBot
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.ui.theme.White
-import com.example.eurogymclass.utilidades.ChatBotApi
 
 @Composable
 fun ChatBotScreen(navController: NavHostController) {

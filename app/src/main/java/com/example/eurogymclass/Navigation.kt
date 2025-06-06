@@ -22,7 +22,7 @@ import com.example.eurogymclass.screens.contacto.ContactoScreen
 import com.example.eurogymclass.perfil.EditarPerfilScreen
 import com.example.eurogymclass.perfil.HistorialReservasScreen
 import com.example.eurogymclass.perfil.PerfilScreen
-import com.example.eurogymclass.screens.ChatBot.ChatBotScreen
+import com.example.eurogymclass.ChatBot.ChatBotScreen
 import com.google.firebase.auth.FirebaseAuth
 
 @RequiresApi(Build.VERSION_CODES.O)
