@@ -7,8 +7,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 object ChatBotApi {
-    private const val API_KEY =
-        "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" // Sustituye por tu clave privada
+    private val API_KEY: String by lazy {
+        val properties = java.util.Properties()
+        val inputStream = java.io.File("secrets.properties").inputStream()
+        properties.load(inputStream)
+        properties.getProperty("OPENAI_API_KEY")
+    }
     private const val ENDPOINT = "https://api.openai.com/v1/chat/completions"
 
     private val client = OkHttpClient()
