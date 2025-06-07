@@ -1,8 +1,11 @@
 package com.example.eurogymclass.ChatBot
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,14 +31,37 @@ fun ChatBotScreen(navController: NavHostController) {
             .padding(50.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Asistente Virtual",
-            fontSize = 30.sp,
-            color = BlueLight,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Volver",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clickable {
+                        navController.navigate("perfil") {
+                            popUpTo("chatbot") { inclusive = true }
+                        }
+                    }
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "Asistente Virtual",
+                fontSize = 22.sp,
+                color = BlueLight,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
             value = mensaje,

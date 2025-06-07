@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.androidx.transition)
     implementation(libs.androidx.espresso.core)
     implementation(libs.ads.mobile.sdk)
+    implementation(libs.firebase.dataconnect)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

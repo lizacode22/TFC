@@ -52,7 +52,7 @@ fun LogoEuroGym(navHostController: NavHostController) {
 
 
 @Composable
-fun TopBar(navController: NavHostController) {
+fun TopBar(navController: NavHostController, showBackArrow: Boolean = true) {
     var showMenu by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -61,14 +61,18 @@ fun TopBar(navController: NavHostController) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_back),
-            contentDescription = "Volver",
-            tint = Color.White,
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { navController.popBackStack() }
-        )
+        if (showBackArrow) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "Volver",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { navController.popBackStack() }
+            )
+        } else {
+            Spacer(modifier = Modifier.width(24.dp))
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -107,7 +111,6 @@ fun TopBar(navController: NavHostController) {
                         cerrarSesionCompleta(context, navController)
                     }
                 )
-
             }
         }
     }

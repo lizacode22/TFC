@@ -35,7 +35,9 @@ class ClasesViewModel : ViewModel() {
         private set
 
     init {
-        cargarClases()
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            cargarClases()
+        }
     }
 
     //no estoy utilizando esto ahora
@@ -53,6 +55,12 @@ class ClasesViewModel : ViewModel() {
     }
 
     fun cargarClases() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            Log.w("Firestore", "No hay usuario autenticado, no se puede escuchar clases.")
+            return
+        }
+
         db.collection("clases")
             .addSnapshotListener { result, error ->
                 if (error != null) {

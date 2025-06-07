@@ -56,31 +56,8 @@ fun EditarPerfilScreen(
 
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
-    var showMenu by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-
-    DropdownMenuItem(
-        text = { Text("Cerrar sesión") },
-        onClick = {
-            showMenu = false
-
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
-                .requestEmail()
-                .build()
-
-            val googleSignInClient = GoogleSignIn.getClient(context, gso)
-
-            googleSignInClient.signOut().addOnCompleteListener {
-                FirebaseAuth.getInstance().signOut()
-                navController.navigate("initial") {
-                    popUpTo(0) { inclusive = true }
-                }
-            }
-        }
-    )
-
 
     LaunchedEffect(usuario) {
         nombre = usuario?.nombre ?: ""
@@ -94,10 +71,81 @@ fun EditarPerfilScreen(
             .padding(16.dp)
     ) {
 
-        TopBar(navController)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "Volver",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        navController.navigate("perfil") {
+                            popUpTo("editarPerfil") { inclusive = true }
+                        }
+                    }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            var showMenu by remember { mutableStateOf(false) }
+
+            Box {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_icono_perfil),
+                    contentDescription = "Perfil",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { showMenu = true }
+                )
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Ver perfil") },
+                        onClick = {
+                            showMenu = false
+                            navController.navigate("perfil")
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Asistente") },
+                        onClick = {
+                            showMenu = false
+                            navController.navigate("chatbot")
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Cerrar sesión") },
+                        onClick = {
+                            showMenu = false
+
+                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
+                                .requestEmail()
+                                .build()
+
+                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                FirebaseAuth.getInstance().signOut()
+                                navController.navigate("initial") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
-
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -109,8 +157,7 @@ fun EditarPerfilScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val user = FirebaseAuth.getInstance().currentUser
@@ -118,81 +165,75 @@ fun EditarPerfilScreen(
             val correo = user?.email ?: ""
             val inicial = correo.firstOrNull()?.uppercase() ?: "?"
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (fotoPerfil != null) {
-                    // Si el usuario tiene una imagen de perfil
-                    AsyncImage(
-                        model = fotoPerfil,
-                        contentDescription = "Foto de perfil",
-                        modifier = Modifier
-                            .size(96.dp)
-                            .clip(CircleShape)
-                            .background(Color.DarkGray)
-                    )
-                } else {
-                    // Si no tiene imagen, mostrar inicial
-                    Box(
-                        modifier = Modifier
-                            .size(96.dp)
-                            .clip(CircleShape)
-                            .background(Color.DarkGray),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = inicial,
-                            color = Color.White,
-                            fontSize = 32.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = correo,
-                    color = Color.LightGray,
-                    fontSize = 14.sp
+            if (fotoPerfil != null) {
+                AsyncImage(
+                    model = fotoPerfil,
+                    contentDescription = "Foto de perfil",
+                    modifier = Modifier
+                        .size(96.dp)
+                        .clip(CircleShape)
+                        .background(Color.DarkGray)
                 )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(96.dp)
+                        .clip(CircleShape)
+                        .background(Color.DarkGray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = inicial,
+                        color = Color.White,
+                        fontSize = 32.sp
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Text("Editar perfil", color = Color.White, fontSize = 24.sp)
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            TextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") },
-                modifier = Modifier.fillMaxWidth()
+            Text(
+                text = correo,
+                color = Color.LightGray,
+                fontSize = 14.sp
             )
+        }
 
-            Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            TextField(
-                value = apellidos,
-                onValueChange = { apellidos = it },
-                label = { Text("Apellidos") },
-                modifier = Modifier.fillMaxWidth()
-            )
+        Text("Editar perfil", color = Color.White, fontSize = 24.sp)
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
-                onClick = {
-                    viewModel.actualizarDatos(nombre, apellidos)
-                    navController.popBackStack()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
-            ) {
-                Text("Guardar cambios", color = Color.White)
-            }
+        TextField(
+            value = nombre,
+            onValueChange = { nombre = it },
+            label = { Text("Nombre") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        TextField(
+            value = apellidos,
+            onValueChange = { apellidos = it },
+            label = { Text("Apellidos") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = {
+                viewModel.actualizarDatos(nombre, apellidos)
+                navController.navigate("perfil") {
+                    popUpTo("editarPerfil") { inclusive = true }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
+        ) {
+            Text("Guardar cambios", color = Color.White)
         }
     }
 }

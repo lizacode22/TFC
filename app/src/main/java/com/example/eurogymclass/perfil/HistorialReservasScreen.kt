@@ -25,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.utilidades.TopBar
+import java.time.LocalDate
+import java.time.LocalTime
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,6 +37,19 @@ fun HistorialReservasScreen(
 ) {
     val clasesReservadas = viewModel.clasesReservadasPorUsuario()
     val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+    val ahora = LocalDate.now().atTime(java.time.LocalTime.now())
+
+    val (clasesFuturas, clasesPasadas) = clasesReservadas.partition { claseConId ->
+        try {
+            val fecha = LocalDate.parse(claseConId.clase.dia)
+            val hora = claseConId.clase.hora.split(":").map { it.toInt() }
+            val fechaHora = fecha.atTime(hora[0], hora[1])
+            fechaHora.isAfter(ahora)
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -49,7 +64,7 @@ fun HistorialReservasScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        if (clasesReservadas.isEmpty()) {
+        if (clasesFuturas.isEmpty()) {
             item {
                 Text(
                     text = "No estás apuntado a ninguna clase.",
@@ -57,9 +72,7 @@ fun HistorialReservasScreen(
                     fontSize = 16.sp,
                     modifier = Modifier.padding(top = 32.dp)
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Button(
                     onClick = { navController.navigate("clases") },
                     modifier = Modifier
@@ -69,9 +82,15 @@ fun HistorialReservasScreen(
                 ) {
                     Text("Ver clases disponibles")
                 }
+                Spacer(modifier = Modifier.height(24.dp))
             }
         } else {
-            items(clasesReservadas) { claseConId ->
+            item {
+                Text("Próximas clases", color = Color.White, fontSize = 20.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            items(clasesFuturas) { claseConId ->
                 ClaseCard(
                     clase = claseConId.clase,
                     yaReservado = uid in claseConId.clase.usuarios,
@@ -84,5 +103,22 @@ fun HistorialReservasScreen(
             }
         }
 
+        if (clasesPasadas.isNotEmpty()) {
+            item {
+                Spacer(modifier = Modifier.height(32.dp))
+                Text("Clases anteriores", color = Color.Gray, fontSize = 18.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            items(clasesPasadas) { claseConId ->
+                ClaseCard(
+                    clase = claseConId.clase,
+                    yaReservado = false,
+                    onToggleReserva = {},
+                    navController = navController
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
     }
 }

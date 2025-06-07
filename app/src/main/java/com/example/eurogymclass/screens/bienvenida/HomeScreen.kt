@@ -43,7 +43,7 @@ fun HomeScreen(navHostController: NavHostController) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        TopBar(navHostController)
+        TopBar(navHostController, showBackArrow = false)
 
         Spacer(modifier = Modifier.height(24.dp))
 

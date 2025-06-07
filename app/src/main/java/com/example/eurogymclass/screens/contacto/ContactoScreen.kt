@@ -24,13 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.R
 import com.example.eurogymclass.utilidades.LogoEuroGym
-import com.google.firebase.auth.FirebaseAuth
 import com.example.eurogymclass.utilidades.TopBar
 
 @Composable
 fun ContactoScreen(navController: NavHostController) {
     val context = LocalContext.current
-    var showMenu by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -62,10 +60,9 @@ fun ContactoScreen(navController: NavHostController) {
         ContactInfoRow(Icons.Filled.Info, "Lunes a Viernes: 7:00 AM - 23:00 PM")
         ContactInfoRow(Icons.Filled.Info, "Sábados y Domingos: 8:00 AM - 14:30 PM")
         ContactInfoRow(Icons.Filled.Phone, "+34 625 68 83 23")
-        ContactInfoRow(Icons.Filled.Email, "recepción@euroindoorpadel.com")
+        ContactInfoRow(Icons.Filled.Email, "recepcion@euroindoorpadel.com")
 
         Spacer(modifier = Modifier.height(24.dp))
-
 
         Image(
             painter = painterResource(id = R.drawable.mapa_location),
@@ -86,9 +83,32 @@ fun ContactoScreen(navController: NavHostController) {
 
 @Composable
 fun ContactInfoRow(icon: ImageVector, text: String) {
+    val context = LocalContext.current
+    val isEmail = text.contains("@")
+    val isPhone = text.startsWith("+34")
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable(enabled = isEmail || isPhone) {
+                when {
+                    isEmail -> {
+                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                            data = Uri.parse("mailto:$text")
+                        }
+                        context.startActivity(intent)
+                    }
+
+                    isPhone -> {
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.parse("tel:$text")
+                        }
+                        context.startActivity(intent)
+                    }
+                }
+            }
     ) {
         Icon(
             imageVector = icon,
