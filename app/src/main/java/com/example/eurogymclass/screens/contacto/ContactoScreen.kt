@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
@@ -30,54 +31,70 @@ import com.example.eurogymclass.utilidades.TopBar
 fun ContactoScreen(navController: NavHostController) {
     val context = LocalContext.current
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp),
+        contentPadding = PaddingValues(
+            top = 24.dp,
+            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 32.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-
-        TopBar(navController)
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            LogoEuroGym(navController)
+        item {
+            TopBar(navController)
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                LogoEuroGym(navController)
+            }
+        }
 
-        Text("Contacto", fontSize = 24.sp, color = Color.White)
+        item {
+            Text("Contacto", fontSize = 24.sp, color = Color.White)
+        }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            ContactInfoRow(Icons.Filled.Place, "Calle Pintores, 6\n28923 Alcorcón, Madrid")
+        }
 
-        ContactInfoRow(Icons.Filled.Place, "Calle Pintores, 6\n28923 Alcorcón, Madrid")
-        Text("Horario", color = Color.White, fontSize = 18.sp)
-        ContactInfoRow(Icons.Filled.Info, "Lunes a Viernes: 7:00 AM - 23:00 PM")
-        ContactInfoRow(Icons.Filled.Info, "Sábados y Domingos: 8:00 AM - 14:30 PM")
-        ContactInfoRow(Icons.Filled.Phone, "+34 625 68 83 23")
-        ContactInfoRow(Icons.Filled.Email, "recepcion@euroindoorpadel.com")
+        item {
+            Column {
+                Text("Horario", color = Color.White, fontSize = 18.sp)
+                ContactInfoRow(Icons.Filled.Info, "Lunes a Viernes: 7:00 AM - 23:00 PM")
+                ContactInfoRow(Icons.Filled.Info, "Sábados y Domingos: 8:00 AM - 14:30 PM")
+            }
+        }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            ContactInfoRow(Icons.Filled.Phone, "+34 625 68 83 23")
+        }
 
-        Image(
-            painter = painterResource(id = R.drawable.mapa_location),
-            contentDescription = "Mapa",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .clickable {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://www.google.com/maps/search/?api=1&query=EuroGym+Alcorcón")
-                    )
-                    context.startActivity(intent)
-                }
-        )
+        item {
+            ContactInfoRow(Icons.Filled.Email, "recepcion@euroindoorpadel.com")
+        }
+
+        item {
+            Image(
+                painter = painterResource(id = R.drawable.mapa_location),
+                contentDescription = "Mapa",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .clickable {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://www.google.com/maps/search/?api=1&query=EuroGym+Alcorcón")
+                        )
+                        context.startActivity(intent)
+                    }
+            )
+        }
     }
 }
 

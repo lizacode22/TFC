@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -31,112 +32,108 @@ import com.google.firebase.auth.FirebaseAuth
 fun GapScreen(navController: NavHostController) {
     var showMenu by remember { mutableStateOf(false) }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp),
+        contentPadding = PaddingValues(
+            top = 16.dp,
+            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 32.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Volver",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { navController.popBackStack() }
-            )
-
-            Icon(
-                painter = painterResource(id = R.drawable.ic_icono_perfil),
-                contentDescription = "Perfil",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { showMenu = true }
-            )
-
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                DropdownMenuItem(
-                    text = { Text("Ver perfil") },
-                    onClick = {
-                        showMenu = false
-                        navController.navigate("perfil")
-                    }
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = "Volver",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { navController.popBackStack() }
                 )
-                DropdownMenuItem(
-                    text = { Text("Cerrar sesión") },
-                    onClick = {
-                        showMenu = false
-                        FirebaseAuth.getInstance().signOut()
-                        navController.navigate("initial") {
-                            popUpTo(0) { inclusive = true }
+
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_icono_perfil),
+                    contentDescription = "Perfil",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { showMenu = true }
+                )
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Ver perfil") },
+                        onClick = {
+                            showMenu = false
+                            navController.navigate("perfil")
                         }
-                    }
-                )
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Cerrar sesión") },
+                        onClick = {
+                            showMenu = false
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate("initial") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    )
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            LogoEuroGym(navController)
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                LogoEuroGym(navController)
+            }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        item {
+            Text("Gap", fontSize = 24.sp, color = Color.White)
+        }
 
-        Text("Gap", fontSize = 24.sp, color = Color.White)
+        item {
+            Image(
+                painter = painterResource(id = R.drawable.gap),
+                contentDescription = "Imagen GAP",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            )
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            Text(
+                text = "El entrenamiento GAP es un tipo de ejercicio físico que se centra en tonificar y definir los glúteos, abdominales y piernas. GAP son las siglas en inglés de Glutes, Abs and Piernas.",
+                color = Color.LightGray,
+                fontSize = 16.sp,
+                lineHeight = 22.sp
+            )
+        }
 
-        Image(
-            painter = painterResource(id = R.drawable.gap),
-            contentDescription = "Imagen Gap",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .clip(RoundedCornerShape(12.dp))
-        )
+        item {
+            Text("Horario", color = Color.White, fontSize = 18.sp)
+            Text("• Martes, Miércoles, Jueves – 17:00 pm", color = Color.LightGray)
+            Text("• Lunes, Viernes – 8:00 am", color = Color.LightGray)
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "El entrenamiento GAP es un tipo de ejercicio físico que se centra en tonificar y definir los glúteos, abdominales y piernas. GAP son las siglas en inglés de Glutes, Abs and Piernas.",
-            color = Color.LightGray,
-            fontSize = 16.sp,
-            lineHeight = 22.sp
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text("Horario", color = Color.White, fontSize = 18.sp)
-        Text("• Martes, Miércoles, Jueves – 17:00 pm", color = Color.LightGray)
-        Text("• Lunes, Viernes – 8:00 am", color = Color.LightGray)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Duración", color = Color.White, fontSize = 18.sp)
-        Text("• 45 minutos.", color = Color.LightGray)
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(
-            onClick = {  },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("Reservar", color = Color.White)
+        item {
+            Text("Duración", color = Color.White, fontSize = 18.sp)
+            Text("• 45 minutos.", color = Color.LightGray)
         }
     }
 }

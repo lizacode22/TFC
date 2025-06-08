@@ -16,6 +16,7 @@ navigationUiKtx = "2.8.9"
 transition = "1.2.0"
 adsMobileSdk = "0.16.0-alpha01"
 firebaseDataconnect = "16.0.2"
+transportApi = "3.0.0"
 
 
 [libraries]
@@ -48,6 +49,7 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-transition = { group = "androidx.transition", name = "transition", version.ref = "transition" }
 ads-mobile-sdk = { group = "com.google.android.libraries.ads.mobile.sdk", name = "ads-mobile-sdk", version.ref = "adsMobileSdk" }
 firebase-dataconnect = { group = "com.google.firebase", name = "firebase-dataconnect", version.ref = "firebaseDataconnect" }
+transport-api = { group = "com.google.android.datatransport", name = "transport-api", version.ref = "transportApi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

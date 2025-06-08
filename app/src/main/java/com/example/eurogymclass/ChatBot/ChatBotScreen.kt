@@ -3,7 +3,9 @@ package com.example.eurogymclass.ChatBot
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -24,11 +26,14 @@ fun ChatBotScreen(navController: NavHostController) {
     var respuesta by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
 
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .background(Color.Black)
-            .padding(50.dp),
+            .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -85,7 +90,7 @@ fun ChatBotScreen(navController: NavHostController) {
             onClick = {
                 cargando = true
                 respuesta = ""
-                ChatBotApi.enviarMensaje(mensaje) {
+                ChatBotApiFinal.enviarMensaje(mensaje) {
                     respuesta = it
                     cargando = false
                 }

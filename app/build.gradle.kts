@@ -1,9 +1,16 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.googleServices)
     alias(libs.plugins.crashlytics)
 }
+
+val secretsPropertiesFile = rootProject.file("secrets.properties")
+val secretsProperties = Properties()
+secretsProperties.load(FileInputStream(secretsPropertiesFile))
 
 android {
     namespace = "com.example.eurogymclass"
@@ -17,6 +24,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "CHATBOT_API_KEY", "\"${secretsProperties["OPENAI_API_KEY"]}\"")
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -40,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -64,7 +74,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    implementation("com.google.android.gms:play-services-auth:20.2.0") // Dependencia para Google SignIn
+    implementation("com.google.android.gms:play-services-auth:20.2.0")
 
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
@@ -85,6 +95,11 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.ads.mobile.sdk)
     implementation(libs.firebase.dataconnect)
+    implementation(libs.transport.api)
+    implementation(libs.transport.api)
+    implementation(libs.transport.api)
+    implementation(libs.transport.api)
+    implementation(libs.transport.api)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

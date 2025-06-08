@@ -67,7 +67,7 @@ fun SignUpScreen(
                 modifier = Modifier
                     .size(28.dp)
                     .clickable {
-                        navController.popBackStack() // <-- volver a Bienvenida
+                        navController.popBackStack()
                     },
                 tint = Color.White
             )
@@ -96,7 +96,7 @@ fun SignUpScreen(
         TextField(
             value = nombres,
             onValueChange = { nombres = it },
-            label = { Text("Nombres") },
+            label = { Text("Nombre") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = UnselectedField,
