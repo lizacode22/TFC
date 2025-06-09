@@ -37,25 +37,21 @@ fun HistorialReservasScreen(
 ) {
     val clasesReservadas = viewModel.clasesReservadasPorUsuario()
     val uid = FirebaseAuth.getInstance().currentUser?.uid
-
-    val ahora = LocalDate.now().atTime(java.time.LocalTime.now())
+    val ahora = LocalDateTime.now()
 
     val diasSemana = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
-    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY))
+    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
     val (clasesFuturas, clasesPasadas) = clasesReservadas.partition { claseConId ->
         try {
-            val indiceDia = diasSemana.indexOf(claseConId.clase.dia)
-            if (indiceDia == -1) return@partition false
-
-            val fechaClase = lunesSemana.plusDays(indiceDia.toLong())
-            val hora = claseConId.clase.hora.split(":").map { it.toInt() }
-            val fechaHora = fechaClase.atTime(hora[0], hora[1])
-            fechaHora.isAfter(ahora)
+            val diaIndex = diasSemana.indexOf(claseConId.clase.dia)
+            val horaSplit = claseConId.clase.hora.split(":").map { it.toInt() }
+            val fechaClase = lunesSemana.plusDays(diaIndex.toLong()).atTime(horaSplit[0], horaSplit[1])
+            fechaClase.isAfter(ahora)
         } catch (e: Exception) {
             false
+        }
     }
-}
 
     LazyColumn(
         modifier = Modifier
