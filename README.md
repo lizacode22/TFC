@@ -116,11 +116,12 @@ erDiagram
 
     clases {
         string id PK
-        string nombre
-        string descripcion
-        string horario
+        string titulo
+        string dia
+        string hora
         number capacidad
-        string[] inscritos FK
+        number inscritos
+        string[] usuarios FK
     }
 
     avisos {
