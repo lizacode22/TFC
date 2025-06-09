@@ -40,16 +40,22 @@ fun HistorialReservasScreen(
 
     val ahora = LocalDate.now().atTime(java.time.LocalTime.now())
 
+    val diasSemana = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
+    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY))
+
     val (clasesFuturas, clasesPasadas) = clasesReservadas.partition { claseConId ->
         try {
-            val fecha = LocalDate.parse(claseConId.clase.dia)
+            val indiceDia = diasSemana.indexOf(claseConId.clase.dia)
+            if (indiceDia == -1) return@partition false
+
+            val fechaClase = lunesSemana.plusDays(indiceDia.toLong())
             val hora = claseConId.clase.hora.split(":").map { it.toInt() }
-            val fechaHora = fecha.atTime(hora[0], hora[1])
+            val fechaHora = fechaClase.atTime(hora[0], hora[1])
             fechaHora.isAfter(ahora)
         } catch (e: Exception) {
             false
-        }
     }
+}
 
     LazyColumn(
         modifier = Modifier
