@@ -1,5 +1,6 @@
 package com.example.eurogymclass.perfil
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,15 +54,16 @@ fun EditarPerfilScreen(
     viewModel: UsuariosViewModel = viewModel()
 ) {
     val usuario = viewModel.usuario
+    val context = LocalContext.current
 
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
-
     LaunchedEffect(usuario) {
-        nombre = usuario?.nombre ?: ""
-        apellidos = usuario?.apellidos ?: ""
+        if (usuario != null && nombre.isBlank() && apellidos.isBlank()) {
+            nombre = usuario.nombre
+            apellidos = usuario.apellidos
+        }
     }
 
     Column(
@@ -70,7 +72,7 @@ fun EditarPerfilScreen(
             .background(Color.Black)
             .padding(16.dp)
     ) {
-
+        
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -146,11 +148,7 @@ fun EditarPerfilScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
+        Row(Modifier.fillMaxWidth(), Arrangement.Center) {
             LogoEuroGym(navController)
         }
 
@@ -182,27 +180,16 @@ fun EditarPerfilScreen(
                         .background(Color.DarkGray),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = inicial,
-                        color = Color.White,
-                        fontSize = 32.sp
-                    )
+                    Text(text = inicial, color = Color.White, fontSize = 32.sp)
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = correo,
-                color = Color.LightGray,
-                fontSize = 14.sp
-            )
+            Text(text = correo, color = Color.LightGray, fontSize = 14.sp)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
         Text("Editar perfil", color = Color.White, fontSize = 24.sp)
-
         Spacer(modifier = Modifier.height(24.dp))
 
         TextField(
@@ -225,9 +212,14 @@ fun EditarPerfilScreen(
 
         Button(
             onClick = {
-                viewModel.actualizarDatos(nombre, apellidos)
-                navController.navigate("perfil") {
-                    popUpTo("editarPerfil") { inclusive = true }
+                if (nombre.isNotBlank() && apellidos.isNotBlank()) {
+                    viewModel.actualizarDatos(nombre, apellidos)
+                    Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show()
+                    navController.navigate("perfil") {
+                        popUpTo("editarPerfil") { inclusive = true }
+                    }
+                } else {
+                    Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier.fillMaxWidth(),
