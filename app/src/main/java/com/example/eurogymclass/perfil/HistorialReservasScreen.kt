@@ -25,7 +25,9 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.utilidades.TopBar
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 
@@ -40,7 +42,8 @@ fun HistorialReservasScreen(
     val ahora = LocalDateTime.now()
 
     val diasSemana = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
-    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(
+        DayOfWeek.MONDAY))
 
     val (clasesFuturas, clasesPasadas) = clasesReservadas.partition { claseConId ->
         try {

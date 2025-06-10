@@ -30,6 +30,8 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.time.DayOfWeek
 import com.example.eurogymclass.utilidades.TopBar
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -151,22 +153,35 @@ fun ClaseCard(
     navController: NavHostController
 ) {
     val estaLlena = clase.inscritos >= clase.capacidad
-
     val diasSemana = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
-
-    val hoy = java.time.LocalDateTime.now()
-    val lunesSemana = LocalDate.now().with(java.time.temporal.TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+    val hoy = LocalDateTime.now()
+    val lunesSemana = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
     val indiceDiaClase = diasSemana.indexOf(clase.dia)
     val fechaClase = lunesSemana.plusDays(indiceDiaClase.toLong())
 
     val horaClase = try {
-        java.time.LocalTime.parse(clase.hora)  // debe estar en formato "HH:mm"
+        LocalTime.parse(clase.hora)
     } catch (e: Exception) {
-        java.time.LocalTime.MIDNIGHT // por defecto, si falla el parseo
+        LocalTime.MIDNIGHT
     }
 
-    val fechaYHoraClase = java.time.LocalDateTime.of(fechaClase, horaClase)
+    val fechaYHoraClase = LocalDateTime.of(fechaClase, horaClase)
     val claseYaPaso = fechaYHoraClase.isBefore(hoy)
+
+    val diaSemana = when (clase.dia.lowercase()) {
+        "lunes" -> DayOfWeek.MONDAY
+        "martes" -> DayOfWeek.TUESDAY
+        "miércoles" -> DayOfWeek.WEDNESDAY
+        "jueves" -> DayOfWeek.THURSDAY
+        "viernes" -> DayOfWeek.FRIDAY
+        else -> null
+    }
+
+    val fechaClaseFormateada = if (claseYaPaso && diaSemana != null) {
+        LocalDate.now()
+            .with(TemporalAdjusters.previousOrSame(diaSemana))
+            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    } else null
 
     Column(
         modifier = Modifier
@@ -180,17 +195,19 @@ fun ClaseCard(
                 color = Color.White,
                 fontSize = 20.sp,
                 modifier = Modifier.clickable {
-                    navController.navigate(clase.titulo.lowercase()) // ej: "pilates"
+                    navController.navigate(clase.titulo.lowercase())
                 }
             )
             Spacer(modifier = Modifier.height(6.dp))
-            Text("${clase.dia} | ${clase.hora}", color = Color.LightGray, fontSize = 16.sp)
+
+            if (claseYaPaso && fechaClaseFormateada != null) {
+                Text("$fechaClaseFormateada | ${clase.hora}", color = Color.LightGray, fontSize = 16.sp)
+            } else {
+                Text("${clase.dia} | ${clase.hora}", color = Color.LightGray, fontSize = 16.sp)
+            }
+
             Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                "${clase.inscritos} / ${clase.capacidad} plazas",
-                color = Color.White,
-                fontSize = 16.sp
-            )
+            Text("${clase.inscritos} / ${clase.capacidad} plazas", color = Color.White, fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -222,15 +239,13 @@ fun ClaseCard(
             )
         }
 
-        Text(
-            text = when {
-                claseYaPaso -> "Finalizada"
-                estaLlena && !yaReservado -> "Completa"
-                yaReservado -> "Cancelar"
-                else -> "Reservar"
-            },
-            color = Color.White,
-            fontSize = 16.sp
-        )
+        if (claseYaPaso) {
+            Text(
+                text = "Finalizada",
+                color = Color.White,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }

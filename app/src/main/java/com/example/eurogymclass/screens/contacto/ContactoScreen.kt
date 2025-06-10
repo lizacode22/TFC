@@ -20,12 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.R
 import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.example.eurogymclass.utilidades.TopBar
+
 
 @Composable
 fun ContactoScreen(navController: NavHostController) {
@@ -98,6 +100,8 @@ fun ContactoScreen(navController: NavHostController) {
     }
 }
 
+
+
 @Composable
 fun ContactInfoRow(icon: ImageVector, text: String) {
     val context = LocalContext.current
@@ -134,6 +138,11 @@ fun ContactInfoRow(icon: ImageVector, text: String) {
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(12.dp))
-        Text(text, color = Color.White, fontSize = 16.sp)
+        Text(
+            text = text,
+            color = Color.White,
+            fontSize = 16.sp,
+            textDecoration = if (isEmail) TextDecoration.Underline else null
+        )
     }
 }
