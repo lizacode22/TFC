@@ -11,16 +11,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UsuariosViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
-    private val uid = FirebaseAuth.getInstance().currentUser?.uid
+    private val auth = FirebaseAuth.getInstance()
+    private val uid = auth.currentUser?.uid
 
     var usuario by mutableStateOf<Usuario?>(null)
         private set
 
     init {
-        cargarDatos()
+        sincronizarUsuario()
     }
 
-    fun cargarDatos() {
+    //Verificamos si el documento del usuario existe en Firestore. Si no existe, se creará con todos los campos.
+    fun sincronizarUsuario() {
         uid?.let { userId ->
             val userRef = db.collection("usuarios").document(userId)
 
@@ -28,15 +30,23 @@ class UsuariosViewModel : ViewModel() {
                 if (doc.exists()) {
                     usuario = doc.toObject(Usuario::class.java)
                 } else {
-                    // Documento no existe, crear uno nuevo con correo actual y nombre/apellidos vacíos
-                    val correo = FirebaseAuth.getInstance().currentUser?.email ?: ""
-                    val nuevoUsuario = Usuario(nombre = "", apellidos = "", email = correo)
+                    val firebaseUser = auth.currentUser
+                    val correo = firebaseUser?.email ?: ""
+                    val nombre = firebaseUser?.displayName ?: ""
+                    val nuevoUsuario = Usuario(
+                        nombre = nombre,
+                        apellidos = "",
+                        email = correo,
+                        uid = userId,
+                        fechaRegistro = System.currentTimeMillis(),
+                        clasesReservadas = emptyList()
+                    )
 
                     userRef.set(nuevoUsuario).addOnSuccessListener {
                         usuario = nuevoUsuario
-                        Log.i("Firestore", "Usuario creado correctamente.")
+                        Log.i("Firestore", "Usuario registrado correctamente.")
                     }.addOnFailureListener {
-                        Log.e("Firestore", "Error al crear usuario", it)
+                        Log.e("Firestore", "Error al registrar usuario", it)
                     }
                 }
             }.addOnFailureListener {
@@ -45,16 +55,22 @@ class UsuariosViewModel : ViewModel() {
         }
     }
 
+    //Actualizar el nombre y los apellidos del usuario en Firestore.
     fun actualizarDatos(nombre: String, apellidos: String) {
-        uid?.let {
-            db.collection("usuarios").document(it)
-                .update("nombre", nombre, "apellidos", apellidos)
-                .addOnSuccessListener {
-                    Log.i("Firestore", "Datos de usuario actualizados.")
-                }
-                .addOnFailureListener {
-                    Log.e("Firestore", "Error actualizando datos de usuario", it)
-                }
-        }
+    if (nombre.isBlank() || apellidos.isBlank()) {
+        Log.w("Firestore", "Los campos no pueden estar vacíos.")
+        return
+    }
+
+    uid?.let {
+        db.collection("usuarios").document(it)
+            .update("nombre", nombre, "apellidos", apellidos)
+            .addOnSuccessListener {
+                Log.i("Firestore", "Datos de usuario actualizados.")
+                usuario = usuario?.copy(nombre = nombre, apellidos = apellidos)
+            }
+            .addOnFailureListener {
+                Log.e("Firestore", "Error actualizando datos de usuario", it)
+            }
     }
 }
