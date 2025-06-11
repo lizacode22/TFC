@@ -1,41 +1,37 @@
 # 💪 EuroGym App
 
-Aplicación móvil desarrollada como parte del *Trabajo de Fin de Ciclo* para la gestión integral de un gimnasio.  
-Permite a los usuarios registrarse, visualizar clases disponibles, reservar su plaza, gestionar su perfil, ver su historial de reservas y recibir notificaciones importantes.
+Es una aplicación móvil para dispositivos Android, desarrollada como parte del *Trabajo de Fin de Curso* de DAM (Desarrollo de Aplicaciones Multiplatadorma), su objetivo es la automatizar procesos en la gestión de un gimnasio.  
+Permite a los usuarios registrarse mediante email/contraseña o Google, visualizar clases disponibles de la semana, reservar y cancelar su plaza, gestionar su perfil, ver su historial de reservas, consultar información a un asistente virtual y recibir comuniacciones importantes por parte del administrador.
 
 ---
-
 ## 📚 Índice
 
-1. [🎯 Objetivo del proyecto](#-objetivo-del-proyecto)  
-2. [🚀 Funcionalidades](#-funcionalidades)  
-3. [🛠️ Tecnologías y herramientas](#️-tecnologías-y-herramientas)
-4. [📄 Modelo de Datos](#️-modelo-de-datos)
-5. [📂 Estructura de carpetas](#️-estructura-de-carpetas)
-6. [📱 Capturas de pantalla](#-capturas-de-pantalla)  
-7. [🔥 Estructura de Firebase](#-estructura-de-firebase)   
-8. [🧪 Instalación y ejecución](#-instalación-y-ejecución)  
-9. [👤 Autor](#-autor)  
-10. [📌 Consideraciones finales](#-consideraciones-finales)
+1. [🎯 Objetivo del proyecto](#objetivo-del-proyecto)  
+2. [🚀 Funcionalidades](#funcionalidades)  
+3. [🛠️ Tecnologías y herramientas](#tecnologías-y-herramientas)  
+4. [📄 Modelo de Datos](#modelo-de-datos)
+5. [📂 Estructura de carpetas](#estructura-de-carpetas)  
+6. [📱 Pantallas principales](#pantallas-principales)
+7. [🔥 Estructura de Firebase](#estructura-de-firebase) 
 
 ---
 
 ## 🎯 Objetivo del proyecto
 
-Desarrollar una aplicación Android moderna para cubrir las necesidades de gestión de clases de un gimnasio que actualmente lleva a cabo una gestión manual y poco profesional.
+Desarrollar una aplicación moderna para cubrir las necesidades de gestión de clases colectivas de un gimnasio y el envío de notificaciones a los usuarios.
 Con esto se busca:
 
 - Agilizar las *reservas de clases* por parte de los usuarios del gimnasio.
 - Facilitar el control de *capacidad y asistencia* a cada una de las clases.
 - Ofrecer una experiencia *intuitiva, limpia y funcional*, lo que hará que el comercio destaque ante sus competidores en el mercado.
-- Implementar una interfaz de usuario intuitiva y sencilla.
-- Implementar una interfaz que represente la imagen del negocio.
+- Implementar una interfaz de usuario intuitiva y sencilla, que representa la imagen del negocio.
 
 ---
 
 ## 🚀 Funcionalidades
 
 - *Registro / login* con email y contraseña
+- *login* con autenticación de Google
 - *Recuperación de contraseña* desde la app
 - *Visualización semanal* de clases por día
 - *Reserva y cancelación de plazas* en tiempo real
@@ -44,7 +40,7 @@ Con esto se busca:
 - *Historial de reservas personales*
 - *Edición de datos personales*
 - *Notificaciones desde Firebase*
-- *Pantalla de contacto* con acceso a ubicación
+- *Pantalla de contacto* con acceso a ubicación, correo eléctronico y teléfono
 - *Persistencia de datos* en Firestore
 
 ---
@@ -52,16 +48,19 @@ Con esto se busca:
 ## 🛠️ Tecnologías y herramientas
 
 - *Lenguaje:* Kotlin + Jetpack Compose
+- *Backend as a Service:* Firebase
 - *Base de datos:* Firebase Firestore
 - *Autenticación:* Firebase Auth
-- *Seguimiento:* Firebase Crashlytic
-- *Mensajería push:* Cloud Messaging
+- *Errores y analítica:* Firebase Crashlytic
+- *Mensajería push:* Cloud Messaging (FCM)
+- *Funciones automáticas:* Firebase Functions con Node.js
 - *UI Framework:* Material 3
 - *Librerías:*
   - Coil (carga de imágenes)
   - Firebase SDK
   - StateFlow + ViewModel
 - *IDE:* Android Studio
+- *Control de versiones:* Git + GitHub
 
 ---
 
@@ -86,6 +85,7 @@ graph LR
   Perfil[Editar perfil]
   Avisos[Ver avisos]
   Contacto[Ver contacto]
+  ChatBot[Preguntar al asistente]
   CerrarSesion[Cerrar sesión]
 
   Usuario --> Inicio
@@ -99,6 +99,7 @@ graph LR
   Usuario --> Perfil
   Usuario --> Avisos
   Usuario --> Contacto
+  Usuario --> ChatBot
   Usuario --> CerrarSesion
 ```
 ---
@@ -106,7 +107,7 @@ graph LR
 ```mermaid
 erDiagram
     usuarios {
-        string id PK
+        string uid PK
         string nombre
         string apellidos
         string email
@@ -189,7 +190,7 @@ EurogymClass/
 
 ### 📲 Pantalla de Bienvenida
 
-Pantalla principal donde el usuario puede registrarse, iniciar sesión, recuperar contraseña o acceder con Google.
+Pantalla principal de la aplicación, es donde el usuario puede registrarse, iniciar sesión, acceder con Google y recuperar contraseña.
 
 <div align="center">
   <img src="readmeImagenes/BienvenidaScreen.png" width="250"/>
@@ -198,7 +199,7 @@ Pantalla principal donde el usuario puede registrarse, iniciar sesión, recupera
 ---
 ### 📲 Pantalla de registro
 
-Pantalla de registro para crear una cuenta de usuario.
+Pantalla de registro donde se crea una cuenta de usuario mediante lo campos expuestos.
 
 <div align="center">
   <img src="readmeImagenes/RegistroScreen.png" width="250"/>
@@ -207,7 +208,7 @@ Pantalla de registro para crear una cuenta de usuario.
 ---
 ### 📲 Pantalla de acceso
 
-Pantalla para ingresar a la aplicación a través de correo y contraseña.
+Pantalla para ingresar a la aplicación a través de correo y contraseña. Dentro de ella se puede recuperar la contraseña o acceder a la pantalla de registro.
 
 <div align="center">
   <img src="readmeImagenes/AccesoScreen.png" width="250"/>
@@ -216,7 +217,7 @@ Pantalla para ingresar a la aplicación a través de correo y contraseña.
 ---
 ### 📲 Pantalla de inicio
 
-Pantalla de inicio que se ejecuta al abrir la aplicación con las credenciales.
+Pantalla home de la app, que se ejecuta como primera pantalla una vez ingresadas las credenciales y se permite el acceso. En ella se tiene una sería de enlaces a las diferentes pantallas de la aplicación.
 
 <div align="center">
   <img src="readmeImagenes/HomeScreen.png" width="250"/>
@@ -226,7 +227,7 @@ Pantalla de inicio que se ejecuta al abrir la aplicación con las credenciales.
 
 ### 📲 Pantalla de Notificaciones
 
-Pantalla de notificaciones, implementando Firebase Firestore en tiempo real.
+Pantalla de comunicaciones y avisos, implementando Firebase Firestore en tiempo real, donde el usuario observará: fecha del aviso, título y descripción.
 
 <div align="center">
   <img src="readmeImagenes/AvisoScreen.png" width="250"/>
@@ -236,7 +237,7 @@ Pantalla de notificaciones, implementando Firebase Firestore en tiempo real.
 
 ### 📲 Pantalla de Contacto
 
-Pantalla de contacto con información del gimnasio y una ubicación que redirije a Google Maps.
+Pantalla de contacto con información del gimnasio y una ubicación que redirije a Google Maps. También se implementa las funcionalidades hacie el teléfono y correo electrónico. 
 
 <div align="center">
   <img src="readmeImagenes/ContactoScreen.png" width="250"/>
@@ -246,7 +247,9 @@ Pantalla de contacto con información del gimnasio y una ubicación que redirije
 
 ### 📲 Pantalla de Reserva
 
-Pantalla donde el usuario visualiza las clases de la semana con opción a realizar la reserva de la clase o su cancelación.
+Pantalla donde el usuario visualiza las clases de la semana con opción a realizar la reserva de la clase o su cancelación. La aplicación está pensada para que se pueda reservar solo en la semana actual en la que se está. 
+
+En ella se visualiza el título de la clase, día que se imparte, hora de inicio y las plazas disponibles.
 
 <div align="center">
   <img src="readmeImagenes/ClasesScreen1.png" width="250"/>
@@ -256,59 +259,73 @@ Pantalla donde el usuario visualiza las clases de la semana con opción a realiz
 
 ## 🔥 Estructura de Firebase
 
-La aplicación **EuroGymClass** utiliza **Firebase** como backend principal, aprovechando varias de sus funcionalidades para gestionar usuarios, almacenar datos en tiempo real y enviar notificaciones.
+La aplicación EurogymClass utiliza Firebase como backend principal, aprovechando sus servicios en la nube para autenticación, almacenamiento de datos y envío de notificaciones automatizadas.
+
 
 ### 📚 Firestore – Base de datos NoSQL
 
-La base de datos está estructurada en colecciones documentales, adaptadas a la lógica del proyecto:
+La base de datos está organizada por colecciones, cada una alineada con los modelos de datos utilizados en la aplicación:
 ```
 Firestore
 ├── usuarios/
-│ └── {uid}
-│ ├── nombre
-│ ├── apellidos
-│ ├── email
-│ └── clasesReservadas: [idClase1, idClase2, ...]
+│   └── {uid}
+│       ├── nombre
+│       ├── apellidos
+│       ├── email
+│       ├── fechaRegistro
+│       └── clasesReservadas: [idClase1, idClase2, ...]
 ├── clases/
-│ └── {idClase}
-│ ├── nombre
-│ ├── descripcion
-│ ├── fecha
-│ ├── capacidad
-│ └── inscritos: [uid1, uid2, ...]
+│   └── {idClase}
+│       ├── titulo
+│       ├── descripcion
+│       ├── dia
+│       ├── hora
+│       ├── capacidad
+│       ├── inscritos (int)
+│       └── usuarios: [uid1, uid2, ...]
+├── historialClases/
+│   └── {idHistorial}
+│       ├── claseId
+│       ├── usuarios: [uid1, uid2, ...]
+│       ├── inscritos
+│       ├── timestamp
+│       └── datos adicionales de clase
 ├── avisos/
-│ └── {idAviso}
-│ ├── titulo
-│ ├── mensaje
-│ └── fechaPublicacion
+│   └── {idAviso}
+│       ├── titulo
+│       ├── mensaje
+│       └── fechaPublicacion
 ```
-> 🔁 **Relación entre colecciones:**  
-> Las reservas se gestionan directamente en cada documento de `clases` mediante una lista de UIDs. En paralelo, se mantiene un historial en `usuarios`.
-
+> 🔁 **Gestión de reservas:**  
+> La lógica de reservas se gestiona directamente en cada documento de clases con la lista de UIDs.
 
 ### 🔐 Firebase Authentication
 
 - Registro e inicio de sesión con **correo y contraseña**.
 - Inicio de sesión con **Google**.
 - Recuperación de contraseña integrada.
-- Protección de rutas mediante sesión activa.
+- Cada usuario está vinculado a un documento individual en la colección usuarios.
 
 
 ### 📩 Firebase Cloud Messaging (FCM)
 
 - Envío de notificaciones **en tiempo real** a los usuarios.
-- Lectura automática de avisos desde la colección `avisos`.
+- Los usuarios reciben avisos globales mediante suscripción al topic "avisos".
+- La app muestra los avisos directamente desde la colección avisos.
 
 
-### 🔒 Reglas de seguridad de Firestore
+### ☁️ Firebase Cloud Functions
 
-Se aplican reglas personalizadas que:
+- Se utiliza una función programada llamada "reiniciarReservasSemanal".
+- Se ejecuta todos los lunes a las 00:00 (hora española).
 
-- ✅ Permiten a los usuarios acceder **solo a su información**.
-- ❌ Restringen la edición de clases y avisos a personal administrativo.
-- 🔐 Protegen los datos sensibles mediante autenticación y permisos.
 
->Esta estructura garantiza un modelo seguro, escalable y fácil de mantener, cumpliendo con los principios de buenas prácticas en aplicaciones móviles conectadas a la nube.
+### 🧯 Firebase Crashlytics
+
+- Permite hacer seguimiento de fallos por dispositivo, versión y usuario.
+- Los errores críticos quedan registrados incluso si el usuario no informa manualmente.
+
+
 ---
 
 
