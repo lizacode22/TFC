@@ -8,8 +8,8 @@ Permite a los usuarios registrarse mediante email/contraseña o Google, visualiz
 
 1. [🎯 Objetivo del proyecto](#-objetivo-del-proyecto)  
 2. [🚀 Funcionalidades](#-funcionalidades)  
-3. [🛠️ Tecnologías y herramientas](#-tecnologías-y-herramientas)  
-4. [📄 Modelo de Datos](#-modelo-de-datos)
+3. [🛠️ Tecnologías y herramientas](#tecnologias-y-herramientas)  
+4. [📄 Modelo de Datos](#modelo-de-datos)
 5. [📂 Estructura de carpetas](#-estructura-de-carpetas)  
 6. [📱 Pantallas principales](#-pantallas-principales)
 7. [🔥 Estructura de Firebase](#-estructura-de-firebase)
