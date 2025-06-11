@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.eurogymclass.data.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class UsuariosViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -38,7 +39,7 @@ class UsuariosViewModel : ViewModel() {
                         apellidos = "",
                         email = correo,
                         uid = userId,
-                        fechaRegistro = System.currentTimeMillis(),
+                        fechaRegistro = Date(),
                         clasesReservadas = emptyList()
                     )
 
@@ -57,20 +58,21 @@ class UsuariosViewModel : ViewModel() {
 
     //Actualizar el nombre y los apellidos del usuario en Firestore.
     fun actualizarDatos(nombre: String, apellidos: String) {
-    if (nombre.isBlank() || apellidos.isBlank()) {
-        Log.w("Firestore", "Los campos no pueden estar vacíos.")
-        return
-    }
+        if (nombre.isBlank() || apellidos.isBlank()) {
+            Log.w("Firestore", "Los campos no pueden estar vacíos.")
+            return
+        }
 
-    uid?.let {
-        db.collection("usuarios").document(it)
-            .update("nombre", nombre, "apellidos", apellidos)
-            .addOnSuccessListener {
-                Log.i("Firestore", "Datos de usuario actualizados.")
-                usuario = usuario?.copy(nombre = nombre, apellidos = apellidos)
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error actualizando datos de usuario", it)
-            }
+        uid?.let {
+            db.collection("usuarios").document(it)
+                .update("nombre", nombre, "apellidos", apellidos)
+                .addOnSuccessListener {
+                    Log.i("Firestore", "Datos de usuario actualizados.")
+                    usuario = usuario?.copy(nombre = nombre, apellidos = apellidos)
+                }
+                .addOnFailureListener {
+                    Log.e("Firestore", "Error actualizando datos de usuario", it)
+                }
+        }
     }
 }

@@ -27,9 +27,17 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.navigationBars
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomeScreen(navHostController: NavHostController) {
+    val user = remember { FirebaseAuth.getInstance().currentUser }
+
+    LaunchedEffect(user) {
+        user?.let {
+            crearUsuarioSiNoExiste(it)
+        }
+    }
     val images = listOf(
         R.drawable.ciclo, R.drawable.bodypump, R.drawable.discos, R.drawable.maquinas
     )
