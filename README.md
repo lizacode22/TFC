@@ -125,6 +125,18 @@ erDiagram
         string[] usuarios FK
     }
 
+    historialClases {
+        string id PK
+        string claseId
+        string titulo
+        string dia
+        string hora
+        number capacidad
+        number inscritos
+        string[] usuarios
+        timestamp timestamp
+    }
+
     avisos {
         string id PK
         string titulo
@@ -133,6 +145,8 @@ erDiagram
     }
 
     usuarios ||--o{ clases : "reserva"
+    historialClases ||--|| clases : "registro"
+
 ```
 ---
 ## 📂 Estructura de carpetas
