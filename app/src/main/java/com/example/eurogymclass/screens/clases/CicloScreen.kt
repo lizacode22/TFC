@@ -1,37 +1,26 @@
 package com.example.eurogymclass.screens.clases
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.R
 import com.example.eurogymclass.utilidades.LogoEuroGym
-import com.google.firebase.auth.FirebaseAuth
+import com.example.eurogymclass.utilidades.TopBar
 
 @Composable
 fun CicloScreen(navController: NavHostController) {
-    var showMenu by remember { mutableStateOf(false) }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -44,52 +33,8 @@ fun CicloScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = "Volver",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { navController.popBackStack() }
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_icono_perfil),
-                    contentDescription = "Perfil",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { showMenu = true }
-                )
-
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Ver perfil") },
-                        onClick = {
-                            showMenu = false
-                            navController.navigate("perfil")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        onClick = {
-                            showMenu = false
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate("initial") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-            }
+            TopBar(navController)
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
         item {
@@ -118,7 +63,7 @@ fun CicloScreen(navController: NavHostController) {
 
         item {
             Text(
-                text = "Es un ejercicio aeróbico y cardiovascular que se realiza sobre una bicicleta estática, en la que se trabaja el tren inferiror: las piernas y los glúteos principalmente. Su finalidad es perder perso y la tonificación de los músculos, además de mejorar la fuerza y la resistencia",
+                text = "Es un ejercicio aeróbico y cardiovascular que se realiza sobre una bicicleta estática, en la que se trabaja el tren inferior: las piernas y los glúteos principalmente. Su finalidad es perder peso y tonificar los músculos, además de mejorar la fuerza y la resistencia.",
                 color = Color.LightGray,
                 fontSize = 16.sp,
                 lineHeight = 22.sp

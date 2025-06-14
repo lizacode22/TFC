@@ -110,7 +110,7 @@ fun BienvenidaScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.ic_launcher),
             contentDescription = "Logo de Eurogym",
             modifier = Modifier.size(250.dp)
         )

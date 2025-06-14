@@ -37,7 +37,7 @@ import com.example.eurogymclass.R
 @Composable
 fun LogoEuroGym(navHostController: NavHostController) {
     Image(
-        painter = painterResource(id = R.drawable.logo),
+        painter = painterResource(id = R.drawable.ic_launcher),
         contentDescription = "Logo",
         modifier = Modifier
             .width(200.dp)
@@ -52,13 +52,18 @@ fun LogoEuroGym(navHostController: NavHostController) {
 
 
 @Composable
-fun TopBar(navController: NavHostController, showBackArrow: Boolean = true) {
+fun TopBar(
+    navController: NavHostController,
+    showBackArrow: Boolean = true,
+    title: String? = null
+) {
     var showMenu by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (showBackArrow) {
@@ -75,6 +80,15 @@ fun TopBar(navController: NavHostController, showBackArrow: Boolean = true) {
         }
 
         Spacer(modifier = Modifier.weight(1f))
+
+        title?.let {
+            Text(
+                text = it,
+                color = Color.White,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
         Box {
             Icon(
@@ -115,7 +129,6 @@ fun TopBar(navController: NavHostController, showBackArrow: Boolean = true) {
         }
     }
 }
-
 @Composable
 fun Modifier.defaultScreenPadding(): Modifier {
     return this.padding(

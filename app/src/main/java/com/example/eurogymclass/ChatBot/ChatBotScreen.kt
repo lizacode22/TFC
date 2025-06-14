@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.ui.theme.BlueLight
 import com.example.eurogymclass.ui.theme.White
+import com.example.eurogymclass.utilidades.LogoEuroGym
+import com.example.eurogymclass.utilidades.TopBar
 
 @Composable
 fun ChatBotScreen(navController: NavHostController) {
@@ -36,35 +38,20 @@ fun ChatBotScreen(navController: NavHostController) {
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Volver",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable {
-                        navController.navigate("perfil") {
-                            popUpTo("chatbot") { inclusive = true }
-                        }
-                    }
-            )
+        TopBar(navController)
 
-            Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Asistente Virtual",
-                fontSize = 22.sp,
-                color = BlueLight,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
+        LogoEuroGym(navController)
 
-            Spacer(modifier = Modifier.weight(1f))
-        }
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = "Asistente Virtual",
+            fontSize = 22.sp,
+            color = BlueLight,
+            fontWeight = FontWeight.Bold
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
