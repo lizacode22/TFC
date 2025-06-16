@@ -47,8 +47,8 @@ fun Navigation(navHostController: NavHostController, auth: FirebaseAuth) {
             AuthScreen(
                 navController = navHostController,
                 auth = auth,
-                startInLogin = startInLogin,
-                onAuthSuccess = { navHostController.navigate("home") }
+                iniciarEnLogin = startInLogin,
+                alAutenticarse = { navHostController.navigate("home") }
             )
         }
         composable("home") { HomeScreen(navHostController) }

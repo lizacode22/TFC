@@ -12,36 +12,36 @@ exports.reiniciarReservasSemanal = onSchedule(
   },
   async (event) => {
     try {
-      const snapshot = await db.collection("clases").get();
-      const batch = db.batch();
-      const ahora = admin.firestore.Timestamp.now();
+      const clasesSnap = await db.collection("clases").get();
+      const lote = db.batch();
+      const fechaActual = admin.firestore.Timestamp.now();
 
-      for (const doc of snapshot.docs) {
-        const data = doc.data();
+      for (const doc of clasesSnap.docs) {
+        const datosClase = doc.data();
 
         // Solo guarda en historial si hay reservas
-        if ((data.usuarios && data.usuarios.length > 0) || data.inscritos > 0) {
+        if ((datosClase.usuarios && datosClase.usuarios.length > 0) || datosClase.inscritos > 0) {
           const historialRef = db.collection("historialClases").doc();
           await historialRef.set({
             claseId: doc.id,
-            titulo: data.titulo || "",
-            dia: data.dia || "",
-            hora: data.hora || "",
-            capacidad: data.capacidad || 0,
-            usuarios: data.usuarios || [],
-            inscritos: data.inscritos || 0,
-            timestamp: ahora
+            titulo: datosClase.titulo || "",
+            dia: datosClase.dia || "",
+            hora: datosClase.hora || "",
+            capacidad: datosClase.capacidad || 0,
+            usuarios: datosClase.usuarios || [],
+            inscritos: datosClase.inscritos || 0,
+            timestamp: fechaActual
           });
         }
 
         // Reiniciar los campos
-        batch.update(doc.ref, {
+        lote.update(doc.ref, {
           usuarios: [],
           inscritos: 0
         });
       }
 
-      await batch.commit();
+      await lote.commit();
       console.log("Reservas reiniciadas y archivadas correctamente.");
     } catch (error) {
       console.error("Error al reiniciar y archivar reservas:", error);

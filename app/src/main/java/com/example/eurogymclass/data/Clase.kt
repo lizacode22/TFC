@@ -29,35 +29,20 @@ data class ClaseConId(
 @RequiresApi(Build.VERSION_CODES.O)
 class ClasesViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
-    private val user = FirebaseAuth.getInstance().currentUser
+    private val usuarioActual = FirebaseAuth.getInstance().currentUser
 
     var clases by mutableStateOf<List<ClaseConId>>(emptyList())
         private set
 
     init {
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            cargarClases()
+        if (usuarioActual != null) {
+            cargarClasesDesdeFirestore()
         }
     }
 
-    //no estoy utilizando esto ahora
-    fun resetearReservas() {
-        db.collection("clases").get().addOnSuccessListener { snapshot ->
-            snapshot.documents.forEach { doc ->
-                db.collection("clases").document(doc.id).update(
-                    mapOf(
-                        "usuarios" to emptyList<String>(),
-                        "inscritos" to 0
-                    )
-                )
-            }
-        }
-    }
-
-    fun cargarClases() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            Log.w("Firestore", "No hay usuario autenticado, no se puede escuchar clases.")
+    fun cargarClasesDesdeFirestore() {
+        if (usuarioActual == null) {
+            Log.w("Firestore", "No hay usuario autenticado, no se pueden cargar clases.")
             return
         }
 
@@ -68,41 +53,41 @@ class ClasesViewModel : ViewModel() {
                     return@addSnapshotListener
                 }
 
-                val lista = mutableListOf<ClaseConId>()
+                val clasesObtenidas  = mutableListOf<ClaseConId>()
 
                 result?.documents?.forEach { doc ->
                     try {
                         val clase = doc.toObject(Clase::class.java) ?: throw Exception("Clase vacía")
-                        lista.add(ClaseConId(doc.id, clase))
+                        clasesObtenidas.add(ClaseConId(doc.id, clase))
                     } catch (e: Exception) {
                         Log.e("Firestore", "Documento con error: ${doc.id} -> ${doc.data}", e)
                     }
                 }
 
-                clases = lista
+                clases = clasesObtenidas
             }
     }
 
-    fun toggleReserva(claseId: String, clase: Clase) {
+    fun alternarReserva(claseId: String, clase: Clase) {
 
-        val uid = user?.uid ?: return
-        val nuevaLista = clase.usuarios.toMutableList()
-        val yaReservado = nuevaLista.contains(uid)
+        val uid = usuarioActual?.uid ?: return
+        val listaUsuarios = clase.usuarios.toMutableList()
+        val yaReservado = uid in listaUsuarios
 
         if (yaReservado) {
-            nuevaLista.remove(uid)
+            listaUsuarios.remove(uid)
         } else {
             if (clase.inscritos >= clase.capacidad) return
-            nuevaLista.add(uid)
+            listaUsuarios.add(uid)
         }
 
-        val actualizaciones = mapOf(
-            "usuarios" to nuevaLista,
-            "inscritos" to nuevaLista.size
+        val datosActualizados = mapOf(
+            "usuarios" to listaUsuarios,
+            "inscritos" to listaUsuarios.size
         )
 
         db.collection("clases").document(claseId)
-            .update(actualizaciones)
+            .update(datosActualizados)
             .addOnSuccessListener {
                 val usuarioRef = db.collection("usuarios").document(uid)
                 val actualizacionUsuario = if (yaReservado) {
@@ -126,7 +111,7 @@ class ClasesViewModel : ViewModel() {
 
 
     fun clasesReservadasPorUsuario(): List<ClaseConId> {
-        val uid = user?.uid ?: return emptyList()
+        val uid = usuarioActual?.uid ?: return emptyList()
         return clases.filter { uid in it.clase.usuarios }
     }
 }

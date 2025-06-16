@@ -1,7 +1,6 @@
 package com.example.eurogymclass.perfil
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,11 +40,12 @@ import com.example.eurogymclass.ui.theme.BlueLight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.R
 import com.example.eurogymclass.utilidades.LogoEuroGym
-import com.example.eurogymclass.utilidades.TopBar
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import coil.compose.AsyncImage
+import com.example.eurogymclass.ui.theme.Black
+import com.example.eurogymclass.utilidades.TopBar
 import com.example.eurogymclass.viewmodels.UsuariosViewModel
 
 @Composable
@@ -54,7 +54,7 @@ fun EditarPerfilScreen(
     viewModel: UsuariosViewModel = viewModel()
 ) {
     val usuario = viewModel.usuario
-    val context = LocalContext.current
+    val contexto = LocalContext.current
 
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
@@ -69,90 +69,20 @@ fun EditarPerfilScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
-            .padding(16.dp)
+            .background(Black)
+            .padding(horizontal = 16.dp)
     ) {
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Volver",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable {
-                        navController.navigate("perfil") {
-                            popUpTo("editarPerfil") { inclusive = true }
-                        }
-                    }
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            var showMenu by remember { mutableStateOf(false) }
-
-            Box {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_icono_perfil),
-                    contentDescription = "Perfil",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { showMenu = true }
-                )
-
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Ver perfil") },
-                        onClick = {
-                            showMenu = false
-                            navController.navigate("perfil")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Asistente") },
-                        onClick = {
-                            showMenu = false
-                            navController.navigate("chatbot")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Cerrar sesión") },
-                        onClick = {
-                            showMenu = false
-
-                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
-                                .requestEmail()
-                                .build()
-
-                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
-
-                            googleSignInClient.signOut().addOnCompleteListener {
-                                FirebaseAuth.getInstance().signOut()
-                                navController.navigate("initial") {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            }
-                        }
-                    )
-                }
-            }
-        }
-
         Spacer(modifier = Modifier.height(24.dp))
-        Row(Modifier.fillMaxWidth(), Arrangement.Center) {
+
+        TopBar(navController)
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             LogoEuroGym(navController)
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -214,12 +144,12 @@ fun EditarPerfilScreen(
             onClick = {
                 if (nombre.isNotBlank() && apellidos.isNotBlank()) {
                     viewModel.actualizarDatos(nombre, apellidos)
-                    Toast.makeText(context, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(contexto, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show()
                     navController.navigate("perfil") {
                         popUpTo("editarPerfil") { inclusive = true }
                     }
                 } else {
-                    Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(contexto, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier.fillMaxWidth(),

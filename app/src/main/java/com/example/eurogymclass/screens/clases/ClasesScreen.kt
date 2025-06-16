@@ -104,11 +104,11 @@ fun ClasesScreen(
             }
         } else {
             items(clasesDelDia) { claseConId ->
-                ClaseCard(
+                TarjetaClase(
                     clase = claseConId.clase,
                     yaReservado = uid in claseConId.clase.usuarios,
                     onToggleReserva = {
-                        viewModel.toggleReserva(claseConId.id, claseConId.clase)
+                        viewModel.alternarReserva(claseConId.id, claseConId.clase)
                     },
                     navController = navController
                 )
@@ -146,7 +146,7 @@ fun DiaSelector(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ClaseCard(
+fun TarjetaClase(
     clase: Clase,
     yaReservado: Boolean,
     onToggleReserva: () -> Unit,

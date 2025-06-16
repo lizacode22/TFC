@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.eurogymclass.data.ClasesViewModel
-import com.example.eurogymclass.screens.clases.ClaseCard
+import com.example.eurogymclass.screens.clases.TarjetaClase
 import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eurogymclass.ui.theme.BlueLight
@@ -96,11 +96,11 @@ fun HistorialReservasScreen(
             }
 
             items(clasesFuturas) { claseConId ->
-                ClaseCard(
+                TarjetaClase(
                     clase = claseConId.clase,
                     yaReservado = uid in claseConId.clase.usuarios,
                     onToggleReserva = {
-                        viewModel.toggleReserva(claseConId.id, claseConId.clase)
+                        viewModel.alternarReserva(claseConId.id, claseConId.clase)
                     },
                     navController = navController
                 )
@@ -116,7 +116,7 @@ fun HistorialReservasScreen(
             }
 
             items(clasesPasadas) { claseConId ->
-                ClaseCard(
+                TarjetaClase(
                     clase = claseConId.clase,
                     yaReservado = false,
                     onToggleReserva = {},

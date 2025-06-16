@@ -31,7 +31,6 @@ fun AvisosScreen(
     viewModel: AvisosViewModel = viewModel()
 ) {
     val avisos by viewModel.avisos.collectAsState()
-    var showMenu by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -79,9 +78,9 @@ fun AvisosScreen(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(avisos) { aviso ->
                 Column {
-                    val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                    val formatoFecha = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                     Text(
-                        text = formato.format(aviso.fecha),
+                        text = formatoFecha.format(aviso.fecha),
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold

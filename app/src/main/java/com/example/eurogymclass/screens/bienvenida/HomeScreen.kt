@@ -31,14 +31,16 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomeScreen(navHostController: NavHostController) {
-    val user = remember { FirebaseAuth.getInstance().currentUser }
+    val usuario = remember { FirebaseAuth.getInstance().currentUser }
 
-    LaunchedEffect(user) {
-        user?.let {
+    // Por si accede por primera vez
+    LaunchedEffect(usuario) {
+        usuario?.let {
             crearUsuarioSiNoExiste(it)
         }
     }
-    val images = listOf(
+
+    val imagenes = listOf(
         R.drawable.ciclo, R.drawable.bodypump, R.drawable.discos, R.drawable.maquinas
     )
 
@@ -51,7 +53,7 @@ fun HomeScreen(navHostController: NavHostController) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        TopBar(navHostController, showBackArrow = false)
+        TopBar(navHostController, mostrarVolver = false)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -103,7 +105,7 @@ fun HomeScreen(navHostController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(images) { imageRes ->
+            items(imagenes) { imageRes ->
                 Image(
                     painter = painterResource(id = imageRes),
                     contentDescription = null,
@@ -129,8 +131,7 @@ fun HomeScreen(navHostController: NavHostController) {
 
         Button(
             onClick = { navHostController.navigate("clases") },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(containerColor = BlueLight)
         ) {
             Text("Ver próximas clases")

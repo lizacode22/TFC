@@ -41,7 +41,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -54,7 +53,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import com.example.eurogymclass.utilidades.defaultScreenPadding
 
 @Composable
 fun BienvenidaScreen(
@@ -62,32 +60,32 @@ fun BienvenidaScreen(
     navigateToSignUp: () -> Unit = {},
     navController: NavHostController
 ) {
-    var showResetDialog by remember { mutableStateOf(false) }
-    var resetEmail by remember { mutableStateOf("") }
-    var resetMessage by remember { mutableStateOf("") }
+    var mostrarDialogoRecuperacion by remember { mutableStateOf(false) }
+    var correoRecuperacion by remember { mutableStateOf("") }
+    var mensajeRecuperacion by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
+    val contexto = LocalContext.current
     val auth = FirebaseAuth.getInstance()
     val scope = rememberCoroutineScope()
 
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+    val opcionesGoogle = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken("1013380689733-q65uu9074hlb9uja0pq7hoti39di8sr7.apps.googleusercontent.com")
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    val clienteGoogle = GoogleSignIn.getClient(contexto, opcionesGoogle)
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+    val lanzador = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
+        if (resultado.resultCode == Activity.RESULT_OK) {
+            val tarea = GoogleSignIn.getSignedInAccountFromIntent(resultado.data)
             try {
-                val account = task.getResult(ApiException::class.java)
-                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                val cuenta = tarea.getResult(ApiException::class.java)
+                val credencial = GoogleAuthProvider.getCredential(cuenta.idToken, null)
 
                 scope.launch {
-                    val result = auth.signInWithCredential(credential).await()
-                    val userName = result.user?.displayName ?: "Usuario"
-                    Toast.makeText(context, "¡Bienvenid@, $userName!", Toast.LENGTH_SHORT).show()
+                    val resultadoAuth = auth.signInWithCredential(credencial).await()
+                    val nombreUsuario = resultadoAuth.user?.displayName ?: "Usuario"
+                    Toast.makeText(contexto, "¡Bienvenido/a, $nombreUsuario!", Toast.LENGTH_SHORT).show()
 
                     navController.navigate("home") {
                         popUpTo(0) { inclusive = true }
@@ -98,7 +96,6 @@ fun BienvenidaScreen(
             }
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -115,29 +112,29 @@ fun BienvenidaScreen(
             modifier = Modifier.size(250.dp)
         )
 
-        if (showResetDialog) {
+        if (mostrarDialogoRecuperacion) {
             AlertDialog(
                 onDismissRequest = {
-                    showResetDialog = false
-                    resetEmail = ""
-                    resetMessage = ""
+                    mostrarDialogoRecuperacion = false
+                    correoRecuperacion = ""
+                    mensajeRecuperacion = ""
                 },
                 title = { Text("Recuperar contraseña") },
                 text = {
                     Column {
-                        Text("Introduce tu correo y recibirás un enlace para restablecer tu contraseña.")
+                        Text("Introduce tu correo y te enviaremos un enlace para restablecer tu contraseña.")
                         Spacer(modifier = Modifier.height(8.dp))
                         TextField(
-                            value = resetEmail,
-                            onValueChange = { resetEmail = it },
+                            value = correoRecuperacion,
+                            onValueChange = { correoRecuperacion = it },
                             label = { Text("Correo electrónico") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        if (resetMessage.isNotEmpty()) {
+                        if (mensajeRecuperacion.isNotEmpty()) {
                             Text(
-                                text = resetMessage,
-                                color = if ("enviado" in resetMessage.lowercase()) Color.Red else Color.Red,
+                                text = mensajeRecuperacion,
+                                color = if ("enviado" in mensajeRecuperacion.lowercase()) Color.Green else Color.Red,
                                 fontSize = 12.sp,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
@@ -146,14 +143,14 @@ fun BienvenidaScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = {
-                        if (resetEmail.isNotEmpty()) {
+                        if (correoRecuperacion.isNotEmpty()) {
                             FirebaseAuth.getInstance()
-                                .sendPasswordResetEmail(resetEmail)
+                                .sendPasswordResetEmail(correoRecuperacion)
                                 .addOnSuccessListener {
-                                    resetMessage = "Correo de recuperación enviado."
+                                    mensajeRecuperacion = "Correo de recuperación enviado correctamente."
                                 }
                                 .addOnFailureListener {
-                                    resetMessage = "Error: correo inválido o no registrado."
+                                    mensajeRecuperacion = "Error al enviar el correo. Verifica el email."
                                 }
                         }
                     }) {
@@ -162,9 +159,9 @@ fun BienvenidaScreen(
                 },
                 dismissButton = {
                     TextButton(onClick = {
-                        showResetDialog = false
-                        resetEmail = ""
-                        resetMessage = ""
+                        mostrarDialogoRecuperacion = false
+                        correoRecuperacion = ""
+                        mensajeRecuperacion = ""
                     }) {
                         Text("Cancelar")
                     }
@@ -174,7 +171,7 @@ fun BienvenidaScreen(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Tu gimnasio en tu bolsillo",
+                text = "¡Tu club, siempre contigo!",
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -209,6 +206,7 @@ fun BienvenidaScreen(
             }
 
             Spacer(modifier = Modifier.height(10.dp))
+
             Button(
                 onClick = { navigateToLogin() },
                 modifier = Modifier
@@ -218,7 +216,7 @@ fun BienvenidaScreen(
                 shape = RoundedCornerShape(24.dp)
             ) {
                 Text(
-                    text = "Iniciar Sesión",
+                    text = "Iniciar sesión",
                     color = Color.Black,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
@@ -227,22 +225,22 @@ fun BienvenidaScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            GoogleButton(
-                title = "Continuar con Google",
-                onClick = {
-                    val intent = googleSignInClient.signInIntent
-                    launcher.launch(intent)
+            BotonGoogle(
+                texto = "Continuar con Google",
+                alHacerClick = {
+                    val intent = clienteGoogle.signInIntent
+                    lanzador.launch(intent)
                 }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "¿Olvidaste la contraseña? Recupérala",
+                text = "¿Olvidaste tu contraseña? Recupérala",
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.clickable {
-                    showResetDialog = true
+                    mostrarDialogoRecuperacion = true
                 }
             )
         }
@@ -252,9 +250,9 @@ fun BienvenidaScreen(
 }
 
 @Composable
-fun GoogleButton(title: String, onClick: () -> Unit) {
+fun BotonGoogle(texto: String, alHacerClick: () -> Unit) {
     Button(
-        onClick = onClick,
+        onClick = alHacerClick,
         modifier = Modifier
             .fillMaxWidth(0.8f)
             .height(50.dp),
@@ -264,12 +262,12 @@ fun GoogleButton(title: String, onClick: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google logo",
+                contentDescription = "Logo Google",
                 modifier = Modifier.size(30.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = title,
+                text = texto,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )

@@ -26,13 +26,13 @@ import java.util.Date
 fun AuthScreen(
     navController: NavHostController,
     auth: FirebaseAuth,
-    startInLogin: Boolean,
-    onAuthSuccess: () -> Unit
+    iniciarEnLogin: Boolean,
+    alAutenticarse: () -> Unit
 ) {
-    var isLoginScreen by remember { mutableStateOf(startInLogin) }
+    var mostrarPantallaLogin by remember { mutableStateOf(iniciarEnLogin) }
 
     AnimatedContent(
-        targetState = isLoginScreen,
+        targetState = mostrarPantallaLogin,
         transitionSpec = {
             if (targetState) {
                 slideInHorizontally { -it } + fadeIn() with slideOutHorizontally { it } + fadeOut()
@@ -40,54 +40,49 @@ fun AuthScreen(
                 slideInHorizontally { it } + fadeIn() with slideOutHorizontally { -it } + fadeOut()
             }
         }
-    ) { screen ->
-        if (screen) {
+    ) { esLogin ->
+        if (esLogin) {
             LoginScreen(
                 navController = navController,
                 auth = auth,
                 onLoginSuccess = {
-                    val user = FirebaseAuth.getInstance().currentUser
-                    if (user != null) {
-                        crearUsuarioSiNoExiste(user)
-                    }
-                    onAuthSuccess()
+                    val usuarioActual = FirebaseAuth.getInstance().currentUser
+                    usuarioActual?.let { crearUsuarioSiNoExiste(it) }
+                    alAutenticarse()
                 },
-                onNavigateToSignUp = { isLoginScreen = false }
+                onNavigateToSignUp = { mostrarPantallaLogin = false }
             )
         } else {
             SignUpScreen(
                 navController = navController,
                 auth = auth,
-                onSignUpSuccess = {
-                    val user = FirebaseAuth.getInstance().currentUser
-                    if (user != null) {
-                        crearUsuarioSiNoExiste(user)
-                    }
-                    onAuthSuccess()
+                alRegistrarExito = {
+                    val usuarioActual = FirebaseAuth.getInstance().currentUser
+                    usuarioActual?.let { crearUsuarioSiNoExiste(it) }
+                    alAutenticarse()
                 },
-                onBackPressed = { isLoginScreen = true }
+                alPulsarVolver = { mostrarPantallaLogin = true }
             )
         }
     }
 }
 
-
-fun crearUsuarioSiNoExiste(user: FirebaseUser) {
+fun crearUsuarioSiNoExiste(usuario: FirebaseUser) {
     val db = FirebaseFirestore.getInstance()
-    val uid = user.uid
-    val userRef = db.collection("usuarios").document(uid)
+    val uid = usuario.uid
+    val referencia = db.collection("usuarios").document(uid)
 
-    userRef.get().addOnSuccessListener { document ->
-        if (!document.exists()) {
-            val nuevoUsuario = Usuario(
-                nombre = user.displayName ?: "",
+    referencia.get().addOnSuccessListener { documento ->
+        if (!documento.exists()) {
+            val nuevo = Usuario(
+                nombre = usuario.displayName ?: "",
                 apellidos = "",
-                email = user.email ?: "",
+                email = usuario.email ?: "",
                 uid = uid,
                 fechaRegistro = Date(),
                 clasesReservadas = emptyList()
             )
-            userRef.set(nuevoUsuario)
+            referencia.set(nuevo)
         }
     }
 }

@@ -54,11 +54,11 @@ fun LogoEuroGym(navHostController: NavHostController) {
 @Composable
 fun TopBar(
     navController: NavHostController,
-    showBackArrow: Boolean = true,
-    title: String? = null
+    mostrarVolver: Boolean = true,
+    titulo: String? = null
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    var menuVisible by remember { mutableStateOf(false) }
+    val contexto = LocalContext.current
 
     Row(
         modifier = Modifier
@@ -66,7 +66,7 @@ fun TopBar(
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (showBackArrow) {
+        if (mostrarVolver) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_back),
                 contentDescription = "Volver",
@@ -81,7 +81,7 @@ fun TopBar(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        title?.let {
+        titulo?.let {
             Text(
                 text = it,
                 color = Color.White,
@@ -97,46 +97,35 @@ fun TopBar(
                 tint = Color.White,
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable { showMenu = true }
+                    .clickable { menuVisible = true }
             )
 
             DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
+                expanded = menuVisible,
+                onDismissRequest = { menuVisible = false }
             ) {
                 DropdownMenuItem(
                     text = { Text("Ver perfil") },
                     onClick = {
-                        showMenu = false
+                        menuVisible = false
                         navController.navigate("perfil")
                     }
                 )
                 DropdownMenuItem(
                     text = { Text("Asistente") },
                     onClick = {
-                        showMenu = false
+                        menuVisible = false
                         navController.navigate("chatbot")
                     }
                 )
                 DropdownMenuItem(
                     text = { Text("Cerrar sesión") },
                     onClick = {
-                        showMenu = false
-                        cerrarSesionCompleta(context, navController)
+                        menuVisible = false
+                        cerrarSesionCompleta(contexto, navController)
                     }
                 )
             }
         }
     }
-}
-@Composable
-fun Modifier.defaultScreenPadding(): Modifier {
-    return this.padding(
-        PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            top = 0.dp,
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        )
-    )
 }

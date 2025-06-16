@@ -31,7 +31,7 @@ import com.example.eurogymclass.utilidades.TopBar
 
 @Composable
 fun ContactoScreen(navController: NavHostController) {
-    val context = LocalContext.current
+    val contexto = LocalContext.current
 
     LazyColumn(
         modifier = Modifier
@@ -62,23 +62,23 @@ fun ContactoScreen(navController: NavHostController) {
         }
 
         item {
-            ContactInfoRow(Icons.Filled.Place, "Calle Pintores, 6\n28923 Alcorcón, Madrid")
+            FilaContacto(Icons.Filled.Place, "Calle Pintores, 6\n28923 Alcorcón, Madrid")
         }
 
         item {
             Column {
                 Text("Horario", color = Color.White, fontSize = 18.sp)
-                ContactInfoRow(Icons.Filled.Info, "Lunes a Viernes: 7:00 AM - 23:00 PM")
-                ContactInfoRow(Icons.Filled.Info, "Sábados y Domingos: 8:00 AM - 14:30 PM")
+                FilaContacto(Icons.Filled.Info, "Lunes a Viernes: 7:00 AM - 23:00 PM")
+                FilaContacto(Icons.Filled.Info, "Sábados y Domingos: 8:00 AM - 14:30 PM")
             }
         }
 
         item {
-            ContactInfoRow(Icons.Filled.Phone, "+34 625 68 83 23")
+            FilaContacto(Icons.Filled.Phone, "+34 625 68 83 23")
         }
 
         item {
-            ContactInfoRow(Icons.Filled.Email, "recepcion@euroindoorpadel.com")
+            FilaContacto(Icons.Filled.Email, "recepcion@euroindoorpadel.com")
         }
 
         item {
@@ -93,7 +93,7 @@ fun ContactoScreen(navController: NavHostController) {
                             Intent.ACTION_VIEW,
                             Uri.parse("https://www.google.com/maps/search/?api=1&query=EuroGym+Alcorcón")
                         )
-                        context.startActivity(intent)
+                        contexto.startActivity(intent)
                     }
             )
         }
@@ -103,7 +103,7 @@ fun ContactoScreen(navController: NavHostController) {
 
 
 @Composable
-fun ContactInfoRow(icon: ImageVector, text: String) {
+fun FilaContacto(icon: ImageVector, text: String) {
     val context = LocalContext.current
     val isEmail = text.contains("@")
     val isPhone = text.startsWith("+34")

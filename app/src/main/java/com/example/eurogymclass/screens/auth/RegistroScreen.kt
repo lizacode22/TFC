@@ -35,18 +35,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun SignUpScreen(
     navController: NavHostController,
     auth: FirebaseAuth,
-    onSignUpSuccess: () -> Unit,
-    onBackPressed: () -> Unit
+    alRegistrarExito: () -> Unit,
+    alPulsarVolver: () -> Unit
 ) {
-    var nombres by remember { mutableStateOf("") }
+    var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var showError by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
+    var correo by remember { mutableStateOf("") }
+    var contrasena by remember { mutableStateOf("") }
+    var confirmarContrasena by remember { mutableStateOf("") }
+    var mostrarError by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
+    var contrasenaVisible by remember { mutableStateOf(false) }
+    var confirmarVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -63,19 +63,18 @@ fun SignUpScreen(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = "Back",
+                contentDescription = "Volver",
                 modifier = Modifier
                     .size(28.dp)
-                    .clickable {
-                        navController.popBackStack()
-                    },
+                    .clickable { navController.popBackStack() },
                 tint = Color.White
             )
         }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Crear Cuenta",
+            text = "Crear cuenta",
             color = White,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
@@ -85,7 +84,7 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Escribe tu información",
+            text = "Completa tus datos",
             color = White.copy(alpha = 0.7f),
             fontSize = 16.sp,
             textAlign = TextAlign.Center
@@ -94,8 +93,8 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         TextField(
-            value = nombres,
-            onValueChange = { nombres = it },
+            value = nombre,
+            onValueChange = { nombre = it },
             label = { Text("Nombre") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
@@ -123,11 +122,10 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
+            value = correo,
+            onValueChange = { correo = it },
+            label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = UnselectedField,
@@ -140,22 +138,17 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
+            value = contrasena,
+            onValueChange = { contrasena = it },
+            label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (contrasenaVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val icon = if (passwordVisible)
-                    Icons.Default.VisibilityOff
-                else
-                    Icons.Default.Visibility
-
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = { contrasenaVisible = !contrasenaVisible }) {
                     Icon(
-                        imageVector = icon,
-                        contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                        imageVector = if (contrasenaVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = null,
                         tint = White
                     )
                 }
@@ -171,22 +164,17 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirmar Password") },
+            value = confirmarContrasena,
+            onValueChange = { confirmarContrasena = it },
+            label = { Text("Confirmar contraseña") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (confirmarVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val icon = if (confirmPasswordVisible)
-                    Icons.Default.VisibilityOff
-                else
-                    Icons.Default.Visibility
-
-                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                IconButton(onClick = { confirmarVisible = !confirmarVisible }) {
                     Icon(
-                        imageVector = icon,
-                        contentDescription = if (confirmPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                        imageVector = if (confirmarVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = null,
                         tint = White
                     )
                 }
@@ -201,9 +189,9 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        AnimatedVisibility(visible = showError, enter = fadeIn(), exit = fadeOut()) {
+        AnimatedVisibility(visible = mostrarError, enter = fadeIn(), exit = fadeOut()) {
             Text(
-                text = errorMessage,
+                text = mensajeError,
                 color = MaterialTheme.colorScheme.error,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
@@ -214,40 +202,41 @@ fun SignUpScreen(
 
         Button(
             onClick = {
-                if (password != confirmPassword) {
-                    showError = true
-                    errorMessage = "Las contraseñas no coinciden!"
+                if (contrasena != confirmarContrasena) {
+                    mostrarError = true
+                    mensajeError = "Las contraseñas no coinciden"
                     return@Button
                 }
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+
+                auth.createUserWithEmailAndPassword(correo, contrasena).addOnCompleteListener { tarea ->
+                    if (tarea.isSuccessful) {
                         val uid = auth.currentUser?.uid
                         val db = FirebaseFirestore.getInstance()
 
-                        val user = hashMapOf(
-                            "nombre" to nombres,
+                        val usuario = hashMapOf(
+                            "nombre" to nombre,
                             "apellidos" to apellidos,
-                            "email" to email,
+                            "email" to correo,
                             "fechaRegistro" to com.google.firebase.Timestamp.now(),
                             "clasesReservadas" to emptyList<String>()
                         )
 
-                        if (uid != null) {
-                            db.collection("usuarios").document(uid).set(user)
+                        uid?.let {
+                            db.collection("usuarios").document(it).set(usuario)
                                 .addOnSuccessListener {
                                     Log.i("Firestore", "Usuario guardado correctamente")
-                                    onSignUpSuccess()
+                                    alRegistrarExito()
                                 }
-                                .addOnFailureListener { e ->
-                                    showError = true
-                                    errorMessage = "Error al guardar datos del usuario"
-                                    Log.e("Firestore", "Error: ${e.message}")
+                                .addOnFailureListener { error ->
+                                    mostrarError = true
+                                    mensajeError = "Error al guardar datos del usuario"
+                                    Log.e("Firestore", "Error: ${error.message}")
                                 }
                         }
                     } else {
-                        showError = true
-                        errorMessage = task.exception?.localizedMessage ?: "Registro fallido"
-                        Log.e("SignUp", "Error: ${task.exception}")
+                        mostrarError = true
+                        mensajeError = tarea.exception?.localizedMessage ?: "No se pudo registrar el usuario"
+                        Log.e("Registro", "Error: ${tarea.exception}")
                     }
                 }
             },
@@ -260,7 +249,7 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = { onBackPressed() }) {
+        TextButton(onClick = { alPulsarVolver() }) {
             Text(
                 text = "¿Ya tienes cuenta? Inicia sesión",
                 color = White,

@@ -30,14 +30,14 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToSignUp: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var showError by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
-    var showResetDialog by remember { mutableStateOf(false) }
-    var resetEmail by remember { mutableStateOf("") }
-    var resetMessage by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
+    var contrasena by remember { mutableStateOf("") }
+    var contrasenaVisible by remember { mutableStateOf(false) }
+    var mostrarError by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
+    var mostrarDialogoRecuperacion by remember { mutableStateOf(false) }
+    var correoRecuperacion by remember { mutableStateOf("") }
+    var mensajeRecuperacion by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -76,8 +76,8 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         TextField(
-            value = email,
-            onValueChange = { email = it },
+            value = correo,
+            onValueChange = { correo = it },
             label = { Text("Correo electrónico") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
@@ -92,22 +92,22 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = password,
-            onValueChange = { password = it },
+            value = contrasena,
+            onValueChange = { contrasena = it },
             label = { Text("Contraseña") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (contrasenaVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val icon = if (passwordVisible)
+                val icon = if (contrasenaVisible)
                     Icons.Default.VisibilityOff
                 else
                     Icons.Default.Visibility
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = { contrasenaVisible = !contrasenaVisible }) {
                     Icon(
                         imageVector = icon,
-                        contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                        contentDescription = if (contrasenaVisible) "Ocultar contraseña" else "Mostrar contraseña",
                         tint = BlueLight
                     )
                 }
@@ -128,7 +128,7 @@ fun LoginScreen(
             fontSize = 14.sp,
             modifier = Modifier
                 .align(Alignment.End)
-                .clickable { showResetDialog = true }
+                .clickable { mostrarDialogoRecuperacion  = true }
                 .padding(top = 8.dp)
         )
 
@@ -136,20 +136,20 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                if (email.isEmpty() || password.isEmpty()) {
-                    showError = true
-                    errorMessage = "El correo electrónico y la contraseña no pueden estar vacíos!"
+                if (correo.isEmpty() || contrasena.isEmpty()) {
+                    mostrarError = true
+                    mensajeError = "El correo electrónico y la contraseña no pueden estar vacíos!"
                     return@Button
                 }
 
-                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                auth.signInWithEmailAndPassword(correo, contrasena).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         onLoginSuccess()
                     } else {
-                        showError = true
+                        mostrarError  = true
                         val firebaseError = task.exception?.localizedMessage?.lowercase() ?: ""
 
-                        errorMessage = when {
+                        mensajeError = when {
                             "password is invalid" in firebaseError -> "La contraseña es incorrecta."
                             "no user record" in firebaseError -> "No existe ninguna cuenta registrada con ese correo."
                             "auth credential is incorrect" in firebaseError -> "Las credenciales son incorrectas o han caducado."
@@ -176,9 +176,9 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        if (showError) {
+        if (mostrarError) {
             Text(
-                text = errorMessage,
+                text = mensajeError,
                 color = Color.Red,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
@@ -193,12 +193,12 @@ fun LoginScreen(
             modifier = Modifier.clickable { onNavigateToSignUp() }
         )
 
-        if (showResetDialog) {
+        if (mostrarDialogoRecuperacion) {
             AlertDialog(
                 onDismissRequest = {
-                    showResetDialog = false
-                    resetEmail = ""
-                    resetMessage = ""
+                    mostrarDialogoRecuperacion = false
+                    correoRecuperacion  = ""
+                    mensajeRecuperacion = ""
                 },
                 title = { Text("Restablecer contraseña") },
                 text = {
@@ -206,16 +206,16 @@ fun LoginScreen(
                         Text("Introduce tu correo y te enviaremos un enlace para restablecer tu contraseña.")
                         Spacer(modifier = Modifier.height(8.dp))
                         TextField(
-                            value = resetEmail,
-                            onValueChange = { resetEmail = it },
+                            value = correoRecuperacion,
+                            onValueChange = { correoRecuperacion = it },
                             label = { Text("Correo electrónico") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        if (resetMessage.isNotEmpty()) {
+                        if (mensajeRecuperacion.isNotEmpty()) {
                             Text(
-                                text = resetMessage,
-                                color = if ("enviado" in resetMessage.lowercase()) Color.Green else Color.Red,
+                                text = mensajeRecuperacion,
+                                color = if ("enviado" in mensajeRecuperacion.lowercase()) Color.Green else Color.Red,
                                 fontSize = 12.sp,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
@@ -224,13 +224,13 @@ fun LoginScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = {
-                        if (resetEmail.isNotEmpty()) {
-                            FirebaseAuth.getInstance().sendPasswordResetEmail(resetEmail)
+                        if (correoRecuperacion.isNotEmpty()) {
+                            FirebaseAuth.getInstance().sendPasswordResetEmail(correoRecuperacion)
                                 .addOnSuccessListener {
-                                    resetMessage = "Correo de recuperación enviado."
+                                    mensajeRecuperacion  = "Correo de recuperación enviado."
                                 }
                                 .addOnFailureListener {
-                                    resetMessage = "Error al enviar el correo. Verifica el email."
+                                    mensajeRecuperacion  = "Error al enviar el correo. Verifica el email."
                                 }
                         }
                     }) {
@@ -239,9 +239,9 @@ fun LoginScreen(
                 },
                 dismissButton = {
                     TextButton(onClick = {
-                        showResetDialog = false
-                        resetEmail = ""
-                        resetMessage = ""
+                        mostrarDialogoRecuperacion  = false
+                        correoRecuperacion = ""
+                        mensajeRecuperacion  = ""
                     }) {
                         Text("Cancelar")
                     }

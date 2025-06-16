@@ -1,8 +1,6 @@
 package com.example.eurogymclass.perfil
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -16,25 +14,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
-import com.example.eurogymclass.R
 import com.google.firebase.auth.FirebaseAuth
 import com.example.eurogymclass.utilidades.LogoEuroGym
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import coil.compose.AsyncImage
 import com.example.eurogymclass.utilidades.TopBar
-import com.example.eurogymclass.utilidades.defaultScreenPadding
 
 @Composable
 fun PerfilScreen(navHostController: NavHostController) {
-    val user = FirebaseAuth.getInstance().currentUser
-    val context = LocalContext.current
+    val usuario = FirebaseAuth.getInstance().currentUser
+    val contexto = LocalContext.current
 
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -42,9 +35,9 @@ fun PerfilScreen(navHostController: NavHostController) {
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    val googleSignInClient = GoogleSignIn.getClient(contexto, gso)
 
-    val correo = user?.email ?: ""
+    val correo = usuario?.email ?: ""
     val inicial = correo.firstOrNull()?.uppercase() ?: "?"
 
     LazyColumn(
@@ -74,9 +67,9 @@ fun PerfilScreen(navHostController: NavHostController) {
         item { Spacer(modifier = Modifier.height(32.dp)) }
 
         item {
-            if (user?.photoUrl != null) {
+            if (usuario?.photoUrl != null) {
                 AsyncImage(
-                    model = user.photoUrl,
+                    model = usuario.photoUrl,
                     contentDescription = "Foto de perfil",
                     modifier = Modifier
                         .size(100.dp)
@@ -105,7 +98,7 @@ fun PerfilScreen(navHostController: NavHostController) {
 
         item {
             Text(
-                text = user?.email ?: "email@ejemplo.com",
+                text = usuario?.email ?: "email@ejemplo.com",
                 fontSize = 16.sp,
                 color = Color.Gray
             )
