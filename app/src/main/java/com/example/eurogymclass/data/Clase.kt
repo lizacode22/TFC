@@ -18,7 +18,8 @@ data class Clase(
     val hora: String = "",
     val inscritos: Int = 0,
     val capacidad: Int = 0,
-    val usuarios: List<String> = emptyList()
+    val usuarios: List<String> = emptyList(),
+    val imagen: String = ""
 )
 
 data class ClaseConId(

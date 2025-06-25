@@ -37,7 +37,7 @@ import com.example.eurogymclass.R
 @Composable
 fun LogoEuroGym(navHostController: NavHostController) {
     Image(
-        painter = painterResource(id = R.drawable.ic_launcher),
+        painter = painterResource(id = R.drawable.logo),
         contentDescription = "Logo",
         modifier = Modifier
             .width(200.dp)

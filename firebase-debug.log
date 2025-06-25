@@ -69,3 +69,105 @@
 [debug] [2025-06-11T23:44:36.813Z] [functions[us-central1-reiniciarReservasSemanal]] function ignored because the pubsub emulator does not exist or is not running.
 [info] i  functions: Loaded functions: reiniciarReservasSemanal 
 [warn] !  functions: The following emulators are not running, calls to these services will affect production: firestore, database, pubsub, storage, eventarc, tasks 
+[debug] [2025-06-14T15:55:12.334Z] DEBUG: File C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\index.js changed, reloading triggers
+[debug] [2025-06-14T15:55:13.422Z] Validating nodejs source
+[debug] [2025-06-14T15:55:15.413Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^4.4.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-06-14T15:55:15.415Z] Building nodejs source
+[debug] [2025-06-14T15:55:15.416Z] Failed to find version of module node: reached end of search path C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\node_modules
+[info] +  functions: Using node@22 from host. 
+[debug] [2025-06-14T15:55:15.438Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-06-14T15:55:15.463Z] Found firebase-functions binary at 'C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8565
+
+[debug] [2025-06-14T15:55:17.258Z] Got response from /__/functions.yaml {"endpoints":{"reiniciarReservasSemanal":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"0 0 * * 1","retryConfig":{},"timeZone":"Europe/Madrid"},"entryPoint":"reiniciarReservasSemanal"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-06-14T15:55:21.306Z] [functions] Loaded functions definitions from source: reiniciarReservasSemanal.
+[debug] [2025-06-16T07:17:32.094Z] DEBUG: File C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\index.js changed, reloading triggers
+[debug] [2025-06-16T07:17:33.158Z] Validating nodejs source
+[debug] [2025-06-16T07:17:35.177Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^4.4.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-06-16T07:17:35.180Z] Building nodejs source
+[debug] [2025-06-16T07:17:35.180Z] Failed to find version of module node: reached end of search path C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\node_modules
+[info] +  functions: Using node@22 from host. 
+[debug] [2025-06-16T07:17:35.201Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-06-16T07:17:35.232Z] Found firebase-functions binary at 'C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8319
+
+[debug] [2025-06-16T07:17:36.463Z] Got response from /__/functions.yaml {"endpoints":{"reiniciarReservasSemanal":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"0 0 * * 1","retryConfig":{},"timeZone":"Europe/Madrid"},"entryPoint":"reiniciarReservasSemanal"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-06-16T07:17:40.493Z] [functions] Loaded functions definitions from source: reiniciarReservasSemanal.
+[debug] [2025-06-16T07:18:06.379Z] DEBUG: File C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\package.json changed, reloading triggers
+[debug] [2025-06-16T07:18:07.395Z] Validating nodejs source
+[debug] [2025-06-16T07:18:08.709Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^4.4.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-06-16T07:18:08.709Z] Building nodejs source
+[debug] [2025-06-16T07:18:08.710Z] Failed to find version of module node: reached end of search path C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\node_modules
+[info] +  functions: Using node@22 from host. 
+[debug] [2025-06-16T07:18:08.710Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-06-16T07:18:08.719Z] Found firebase-functions binary at 'C:\Users\Liz\AndroidStudioProjects\EurogymClass\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8661
+
+[debug] [2025-06-16T07:18:09.528Z] Got response from /__/functions.yaml {"endpoints":{"reiniciarReservasSemanal":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"scheduleTrigger":{"schedule":"0 0 * * 1","retryConfig":{},"timeZone":"Europe/Madrid"},"entryPoint":"reiniciarReservasSemanal"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}],"extensions":{}}
+[debug] [2025-06-16T07:18:13.561Z] [functions] Loaded functions definitions from source: reiniciarReservasSemanal.

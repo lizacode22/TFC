@@ -2,6 +2,7 @@ package com.example.eurogymclass.screens.clases
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -129,6 +131,7 @@ fun DiaSelector(
         modifier = Modifier.fillMaxWidth()
     ) {
         dias.forEach { dia ->
+            val letra = if (dia == "Miércoles") "X" else dia.take(1)
             Button(
                 onClick = { onDiaSeleccionado(dia) },
                 colors = ButtonDefaults.buttonColors(
@@ -138,7 +141,7 @@ fun DiaSelector(
                     .weight(1f)
                     .padding(horizontal = 4.dp)
             ) {
-                Text(dia.take(1), color = if (dia == seleccionado) Color.Black else Color.White)
+                Text(letra, color = if (dia == seleccionado) Color.Black else Color.White)
             }
         }
     }
@@ -152,7 +155,15 @@ fun TarjetaClase(
     onToggleReserva: () -> Unit,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
+    val imagenId = clase.imagen?.takeIf { it.isNotBlank() }?.let {
+        val id = context.resources.getIdentifier(it, "drawable", context.packageName)
+        if (id != 0) id else R.drawable.ic_launcher_foreground
+    } ?: R.drawable.ic_launcher_foreground
+
     val estaLlena = clase.inscritos >= clase.capacidad
+
+    // Cálculo de si la clase ya ha pasado
     val diasSemana = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
     val hoy = LocalDateTime.now()
     val lunesSemana = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
@@ -168,84 +179,72 @@ fun TarjetaClase(
     val fechaYHoraClase = LocalDateTime.of(fechaClase, horaClase)
     val claseYaPaso = fechaYHoraClase.isBefore(hoy)
 
-    val diaSemana = when (clase.dia.lowercase()) {
-        "lunes" -> DayOfWeek.MONDAY
-        "martes" -> DayOfWeek.TUESDAY
-        "miércoles" -> DayOfWeek.WEDNESDAY
-        "jueves" -> DayOfWeek.THURSDAY
-        "viernes" -> DayOfWeek.FRIDAY
-        else -> null
-    }
-
-    val fechaClaseFormateada = if (claseYaPaso && diaSemana != null) {
-        LocalDate.now()
-            .with(TemporalAdjusters.previousOrSame(diaSemana))
-            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    } else null
-
-    Column(
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.DarkGray, shape = RoundedCornerShape(12.dp))
-            .padding(16.dp)
+            .padding(vertical = 8.dp)
     ) {
-        Column(modifier = Modifier.padding(start = 8.dp)) {
-            Text(
-                text = clase.titulo,
-                color = Color.White,
-                fontSize = 20.sp,
-                modifier = Modifier.clickable {
-                    navController.navigate(clase.titulo.lowercase())
-                }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = imagenId),
+                contentDescription = clase.titulo,
+                modifier = Modifier
+                    .size(90.dp)
+                    .padding(end = 12.dp)
+                    .clickable {
+                        navController.navigate(clase.titulo.lowercase())
+                    }
             )
-            Spacer(modifier = Modifier.height(6.dp))
 
-            if (claseYaPaso && fechaClaseFormateada != null) {
-                Text("$fechaClaseFormateada | ${clase.hora}", color = Color.LightGray, fontSize = 16.sp)
-            } else {
-                Text("${clase.dia} | ${clase.hora}", color = Color.LightGray, fontSize = 16.sp)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = clase.titulo,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    modifier = Modifier.clickable { navController.navigate(clase.titulo.lowercase()) }
+                )
+                Text(
+                    text = "${clase.dia} - ${clase.hora}",
+                    color = Color.LightGray,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = "${clase.inscritos} / ${clase.capacidad} plazas",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
-            Text("${clase.inscritos} / ${clase.capacidad} plazas", color = Color.White, fontSize = 16.sp)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = onToggleReserva,
-            enabled = !claseYaPaso && (!estaLlena || yaReservado),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = when {
-                    claseYaPaso -> Color.Gray
-                    yaReservado -> Color.Red
-                    estaLlena -> Color.Gray
-                    else -> BlueLight
-                }
-            ),
-            modifier = Modifier
-                .align(Alignment.End)
-                .height(48.dp)
-        ) {
-            Text(
-                text = when {
-                    claseYaPaso -> "Finalizada"
-                    estaLlena && !yaReservado -> "Completa"
-                    yaReservado -> "Cancelar"
-                    else -> "Reservar"
-                },
-                color = Color.White,
-                fontSize = 16.sp
-            )
-        }
-
-        if (claseYaPaso) {
-            Text(
-                text = "Finalizada",
-                color = Color.White,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            Button(
+                onClick = onToggleReserva,
+                enabled = !claseYaPaso && (!estaLlena || yaReservado),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = when {
+                        claseYaPaso -> Color.Gray
+                        yaReservado -> Color.Red
+                        estaLlena -> Color.DarkGray
+                        else -> BlueLight
+                    }
+                ),
+                modifier = Modifier.height(40.dp)
+            ) {
+                Text(
+                    text = when {
+                        claseYaPaso -> "Finalizada"
+                        yaReservado -> "Cancelar"
+                        estaLlena -> "Completa"
+                        else -> "Reservar"
+                    },
+                    color = Color.White
+                )
+            }
         }
     }
 }
